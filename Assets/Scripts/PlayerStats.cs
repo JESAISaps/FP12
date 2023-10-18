@@ -5,6 +5,7 @@ using FishNet.Object.Synchronizing;
 public class PlayerStats : NetworkBehaviour
 {
     [SyncVar] public int health = 100;
+
     public void Damage(int amount)
     {
         ChangeHealth(this, -amount);
