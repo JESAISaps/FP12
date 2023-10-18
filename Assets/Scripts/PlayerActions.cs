@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class PlayerActions : NetworkBehaviour
 {
     public InputAction shoot;
+
     [SerializeField]
     private WeaponScript weaponScript;
 
@@ -17,6 +18,7 @@ public class PlayerActions : NetworkBehaviour
     {
         weaponScript = gameObject.GetComponent<WeaponScript>();
     }*/
+
     void Update()
     {
         if (shoot.IsPressed())
@@ -26,6 +28,11 @@ public class PlayerActions : NetworkBehaviour
             {
                 if (target.collider.CompareTag("Player"))
                 {
+                    if (target.collider.name == "couille")
+                    {
+                       //il est mort
+                    }
+
                     Debug.Log("Player " + target.collider.name + " has been touched");
                     Debug.Log("calling severrpc");
                     PlayerTouchedServer(target.transform.parent.gameObject, gameObject, weaponScript.weaponStats.damage);
