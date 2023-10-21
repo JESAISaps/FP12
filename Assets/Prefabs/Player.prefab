@@ -252,7 +252,7 @@ MonoBehaviour:
   jumpSpeed: 8
   gravity: 20
   lookSpeed: 2
-  lookXLimit: 45
+  lookXLimit: 80
   canMove: 1
   cameraYOffset: 0.4
 --- !u!114 &3439044518382289301
