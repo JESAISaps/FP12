@@ -12,6 +12,7 @@ public class WeaponScript : MonoBehaviour
         shootCameraTransform = Camera.main.transform;
         SetWeaponLayerRecursively(transform);
     }
+    /*
     public RaycastHit Shoot()
     {
         RaycastHit hit;
@@ -23,7 +24,7 @@ public class WeaponScript : MonoBehaviour
         }
 
         return hit;
-    }
+    }*/
     /*
     private void Update()
     {
@@ -38,12 +39,10 @@ public class WeaponScript : MonoBehaviour
         weaponPart.gameObject.layer = 3; // met la layer 3 qui est celle de weapon
 
         if (weaponPart.childCount == 0)
-        {
             return;
-        }
         foreach (Transform child in transform)
         {
-            SetWeaponLayerRecursively(child);
+            SetWeaponLayerRecursively(child.transform);
         }
     }
 }

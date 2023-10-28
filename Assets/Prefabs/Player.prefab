@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1493372032483546322}
   - component: {fileID: 863940456749903774}
   - component: {fileID: 5180326518775018095}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 803737718599731124}
   - component: {fileID: 6582359990757764673}
   - component: {fileID: 6364288362170030034}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: eye (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,7 +182,8 @@ GameObject:
   - component: {fileID: -5708214972734062945}
   - component: {fileID: -1420168243865728553}
   - component: {fileID: 1285329882628159819}
-  m_Layer: 0
+  - component: {fileID: -20605114360366560}
+  m_Layer: 8
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -362,7 +363,7 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings:
     - m_Name: 
-      m_Id: eacef2bc-3bfc-4ce8-8874-700b6c0f59ac
+      m_Id: 5456e689-5b52-49d7-99f0-4ce95f6d7a5e
       m_Path: <Mouse>/leftButton
       m_Interactions: 
       m_Processors: 
@@ -370,8 +371,10 @@ MonoBehaviour:
       m_Action: Shoot
       m_Flags: 0
     m_Flags: 0
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 256
   weaponScript: {fileID: 5583693260168029185}
-  playerData: {fileID: 1285329882628159819}
 --- !u!114 &-1420168243865728553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -391,8 +394,6 @@ MonoBehaviour:
   - {fileID: 6067735299923216504}
   - {fileID: -5708214972734062945}
   - {fileID: 5583693260168029185}
-  - {fileID: 1285329882628159819}
-  - {fileID: -1420168243865728553}
 --- !u!114 &1285329882628159819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -408,10 +409,22 @@ MonoBehaviour:
   _componentIndexCache: 4
   _addedNetworkObject: {fileID: 4017545286599321838}
   _networkObjectCache: {fileID: 4017545286599321838}
-  maxHealth: 100
   health: 100
-  isDead: 0
-  respawnTime: 0
+--- !u!114 &-20605114360366560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3234332654135118719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c71fd7f855ec523429999fc4e14a1928, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _overrideType: 3
+  _updateHostVisibility: 1
+  _observerConditions: []
 --- !u!1 &3693891142096608343
 GameObject:
   m_ObjectHideFlags: 0
@@ -422,7 +435,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7798079671737878195}
   - component: {fileID: 5818963584850394570}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Graphics
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -481,7 +494,7 @@ GameObject:
   - component: {fileID: 2939452150541051657}
   - component: {fileID: 2554407577333872195}
   - component: {fileID: 1366834183371111562}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -562,7 +575,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6329892482511530884}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Weapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -596,7 +609,7 @@ PrefabInstance:
     - target: {fileID: 1270022027046455725, guid: 02d8d086be85eab48b16c63d54c0bd16,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6024121474967816455, guid: 02d8d086be85eab48b16c63d54c0bd16,
         type: 3}
@@ -606,12 +619,12 @@ PrefabInstance:
     - target: {fileID: 6024121474967816455, guid: 02d8d086be85eab48b16c63d54c0bd16,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7320613721252736661, guid: 02d8d086be85eab48b16c63d54c0bd16,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8040104506760808432, guid: 02d8d086be85eab48b16c63d54c0bd16,
         type: 3}
