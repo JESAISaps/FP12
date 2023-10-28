@@ -24,14 +24,14 @@ public class WeaponScript : MonoBehaviour
 
         return hit;
     }
-
+    /*
     private void Update()
     {
         // temporaire pour les tirs
         if (Input.GetButtonDown("Fire1")){
             Shoot();
         }
-    }
+    }*/
 
     private void SetWeaponLayerRecursively(Transform weaponPart)
     {

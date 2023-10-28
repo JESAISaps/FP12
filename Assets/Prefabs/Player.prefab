@@ -371,7 +371,7 @@ MonoBehaviour:
       m_Flags: 0
     m_Flags: 0
   weaponScript: {fileID: 5583693260168029185}
-  playerData: {fileID: 0}
+  playerData: {fileID: 1285329882628159819}
 --- !u!114 &-1420168243865728553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -408,7 +408,10 @@ MonoBehaviour:
   _componentIndexCache: 4
   _addedNetworkObject: {fileID: 4017545286599321838}
   _networkObjectCache: {fileID: 4017545286599321838}
+  maxHealth: 100
   health: 100
+  isDead: 0
+  respawnTime: 0
 --- !u!1 &3693891142096608343
 GameObject:
   m_ObjectHideFlags: 0

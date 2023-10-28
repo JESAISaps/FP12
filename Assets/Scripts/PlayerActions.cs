@@ -13,37 +13,35 @@ public class PlayerActions : NetworkBehaviour
 
     [SerializeField]
     private PlayerStats playerData;
-    /*
-    void Start()
-    {
-        weaponScript = gameObject.GetComponent<WeaponScript>();
-    }*/
 
     void Update()
     {
-        if (shoot.IsPressed())
+        if (!playerData.isDead)
         {
-            RaycastHit target = weaponScript.Shoot();
-            if (target.collider is not null) 
+            if (shoot.IsPressed())
             {
-                if (target.collider.CompareTag("Player"))
+                RaycastHit target = weaponScript.Shoot();
+                if (target.collider is not null)
                 {
-                    if (target.collider.name == "couille")
+                    if (target.collider.CompareTag("Player"))
                     {
-                       //il est mort
+                        if (target.collider.name == "couille")
+                        {
+                            //il est mort
+                        }
+
+                        Debug.Log("Player " + target.collider.name + " has been touched");
+                        Debug.Log("calling severrpc");
+                        PlayerTouchedServer(target.transform.parent.gameObject, gameObject, weaponScript.weaponStats.damage);
                     }
+                    else
+                    {
+                        Debug.Log(target.collider.name + " touched in PlayerAction");
+                    }
+                }
 
-                    Debug.Log("Player " + target.collider.name + " has been touched");
-                    Debug.Log("calling severrpc");
-                    PlayerTouchedServer(target.transform.parent.gameObject, gameObject, weaponScript.weaponStats.damage);
-                }
-                else
-                {
-                    Debug.Log(target.collider.name + " touched in PlayerAction");
-                }
+
             }
-
-            
         }
     }
 
