@@ -10,6 +10,7 @@ public class WeaponScript : MonoBehaviour
     private void Start()
     {
         shootCameraTransform = Camera.main.transform;
+        SetWeaponLayerRecursively(transform);
     }
     public RaycastHit Shoot()
     {
@@ -29,6 +30,20 @@ public class WeaponScript : MonoBehaviour
         // temporaire pour les tirs
         if (Input.GetButtonDown("Fire1")){
             Shoot();
+        }
+    }
+
+    private void SetWeaponLayerRecursively(Transform weaponPart)
+    {
+        weaponPart.gameObject.layer = 3; // met la layer 3 qui est celle de weapon
+
+        if (weaponPart.childCount == 0)
+        {
+            return;
+        }
+        foreach (Transform child in transform)
+        {
+            SetWeaponLayerRecursively(child);
         }
     }
 }

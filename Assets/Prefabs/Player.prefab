@@ -392,6 +392,7 @@ MonoBehaviour:
   - {fileID: -5708214972734062945}
   - {fileID: 5583693260168029185}
   - {fileID: 1285329882628159819}
+  - {fileID: -1420168243865728553}
 --- !u!114 &1285329882628159819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -592,7 +593,7 @@ PrefabInstance:
     - target: {fileID: 1270022027046455725, guid: 02d8d086be85eab48b16c63d54c0bd16,
         type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6024121474967816455, guid: 02d8d086be85eab48b16c63d54c0bd16,
         type: 3}
@@ -602,12 +603,12 @@ PrefabInstance:
     - target: {fileID: 6024121474967816455, guid: 02d8d086be85eab48b16c63d54c0bd16,
         type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7320613721252736661, guid: 02d8d086be85eab48b16c63d54c0bd16,
         type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8040104506760808432, guid: 02d8d086be85eab48b16c63d54c0bd16,
         type: 3}
