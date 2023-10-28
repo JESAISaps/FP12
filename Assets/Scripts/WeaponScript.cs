@@ -40,7 +40,8 @@ public class WeaponScript : MonoBehaviour
 
         if (weaponPart.childCount == 0)
             return;
-        foreach (Transform child in transform)
+
+        foreach (Transform child in weaponPart)
         {
             SetWeaponLayerRecursively(child.transform);
         }
