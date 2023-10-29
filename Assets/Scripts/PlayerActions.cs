@@ -1,5 +1,4 @@
-using UnityEngine;
-using FishNet.Connection;
+/*using UnityEngine;
 using FishNet.Object;
 using UnityEngine.InputSystem;
 
@@ -13,37 +12,33 @@ public class PlayerActions : NetworkBehaviour
 
     [SerializeField]
     private PlayerStats playerData;
-    /*
-    void Start()
-    {
-        weaponScript = gameObject.GetComponent<WeaponScript>();
-    }*/
 
     void Update()
     {
-        if (shoot.IsPressed())
+        if (!playerData.isDead)
         {
-            RaycastHit target = weaponScript.Shoot();
-            if (target.collider is not null) 
+            if (shoot.IsPressed())
             {
-                if (target.collider.CompareTag("Player"))
+                RaycastHit target = weaponScript.Shoot();
+                if (target.collider is not null)
                 {
-                    if (target.collider.name == "couille")
+                    if (target.collider.CompareTag("Player"))
                     {
-                       //il est mort
-                    }
+                        if (target.collider.name == "couille")
+                        {
+                            //il est mort
+                        }
 
-                    Debug.Log("Player " + target.collider.name + " has been touched");
-                    Debug.Log("calling severrpc");
-                    PlayerTouchedServer(target.transform.parent.gameObject, gameObject, weaponScript.weaponStats.damage);
-                }
-                else
-                {
-                    Debug.Log(target.collider.name + " touched in PlayerAction");
+                        Debug.Log("Player " + target.collider.name + " has been touched");
+                        Debug.Log("calling severrpc");
+                        PlayerTouchedServer(target.transform.parent.gameObject, gameObject, weaponScript.weaponStats.damage);
+                    }
+                    else
+                    {
+                        Debug.Log(target.collider.name + " touched in PlayerAction");
+                    }
                 }
             }
-
-            
         }
     }
 
@@ -69,5 +64,55 @@ public class PlayerActions : NetworkBehaviour
     {
         Debug.Log("entered observerrpc");
         player.GetComponent<PlayerStats>().Damage(damage);
+    }
+}
+*/
+using UnityEngine;
+using FishNet.Object;
+using FishNet.Connection;
+using UnityEngine.InputSystem;
+
+public class PlayerActions : NetworkBehaviour
+{
+    public InputAction shoot;
+    float fireTimer;
+
+
+    [SerializeField]
+    private WeaponScript weaponScript;
+
+    private void Update()
+    {
+        if (!base.IsOwner)
+            return;
+
+        if (shoot.IsPressed() | Input.GetButtonDown("Fire1"))
+        {
+            if (fireTimer <= 0)
+            {
+                Shoot();
+                fireTimer = weaponScript.currentWeaponData.firerate;
+            }
+        }
+
+        if (fireTimer > 0)
+            fireTimer -= Time.deltaTime;
+    }
+
+    private void Shoot()
+    {
+        ShootServer(weaponScript.currentWeaponData.damage, Camera.main.transform.position, Camera.main.transform.forward);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ShootServer(int damageToGive, Vector3 position, Vector3 direction)
+    {
+        if (Physics.Raycast(position, direction, out RaycastHit hit, weaponScript.currentWeaponData.range))
+        {
+            if (hit.collider.CompareTag("Player"))
+            {
+                hit.transform.parent.gameObject.GetComponent<PlayerStats>().ReceiveDamage(damageToGive);
+            } 
+        }
     }
 }
