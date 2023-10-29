@@ -7,7 +7,7 @@ using FishNet.Object;
 public class DisableComponents : NetworkBehaviour
 {
     [SerializeField]
-    private Component[] toDisable;
+    private Component[] componentToDisable;
 
     // Start is called before the first frame update
     public override void OnStartClient()
@@ -15,7 +15,7 @@ public class DisableComponents : NetworkBehaviour
     {
         if (!base.IsOwner)
         {
-            foreach (MonoBehaviour item in toDisable)
+            foreach (MonoBehaviour item in componentToDisable)
             {
                 item.enabled = false;
             }

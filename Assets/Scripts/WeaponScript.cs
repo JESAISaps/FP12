@@ -3,14 +3,27 @@ using UnityEngine;
 public class WeaponScript : MonoBehaviour
 {
     [SerializeField]
-    public WeaponData weaponStats;
+    private WeaponData[] weaponStats;
+    // important que l'arme et sont ScriptableObject soient en meme indice
+    [SerializeField]
+    private GameObject[] weapons;
+
+    [HideInInspector]
+    public WeaponData currentWeaponData;
 
     private Transform shootCameraTransform;
 
     private void Start()
     {
         shootCameraTransform = Camera.main.transform;
-        SetWeaponLayerRecursively(transform);
+
+
+        foreach (GameObject weapon in weapons)
+        {
+            SetWeaponLayerRecursively(weapon, 3);
+        }
+
+        currentWeaponData = weaponStats[0];
     }
     /*
     public RaycastHit Shoot()
@@ -33,17 +46,19 @@ public class WeaponScript : MonoBehaviour
             Shoot();
         }
     }*/
-
-    private void SetWeaponLayerRecursively(Transform weaponPart)
+    private void SetWeaponLayerRecursively(GameObject weapon, int layer)
     {
-        weaponPart.gameObject.layer = 3; // met la layer 3 qui est celle de weapon
+        weapon.layer = layer; // met la layer 3 qui est celle de weapon
 
-        if (weaponPart.childCount == 0)
-            return;
-
-        foreach (Transform child in weaponPart)
+        // applique la layer de maniere recursive a tous les enfants
+        foreach(Transform child in weapon.transform)
         {
-            SetWeaponLayerRecursively(child.transform);
+            child.gameObject.layer = layer;
+
+            if (child.GetComponentInChildren<Transform>())
+            {
+                SetWeaponLayerRecursively(child.gameObject, layer);
+            }
         }
     }
 }
