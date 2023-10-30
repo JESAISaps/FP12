@@ -14,6 +14,8 @@ public sealed class PawnMovement : NetworkBehaviour
 	[SerializeField]
 	private float gravityScale;
 
+	private CeilingCheck ceilingCheck;
+
 	private CharacterController _characterController;
 
 	private Vector3 _velocity;
@@ -25,6 +27,8 @@ public sealed class PawnMovement : NetworkBehaviour
 		_input = GetComponent<PawnInput>();
 
 		_characterController = GetComponent<CharacterController>();
+
+		ceilingCheck = GetComponentInChildren<CeilingCheck>();
 	}
 
 	private void Update()
@@ -48,11 +52,17 @@ public sealed class PawnMovement : NetworkBehaviour
 				_velocity.y = jumpSpeed;
 			}
 		}
+		else if (ceilingCheck.isTouchingCeiling)
+		{
+				_velocity.y = Physics.gravity.y * gravityScale * Time.deltaTime * 10;
+		}
 		else
 		{
 			_velocity.y += Physics.gravity.y * gravityScale * Time.deltaTime;
 		}
 
 		_characterController.Move(_velocity * Time.deltaTime);
+
+
 	}
 }
