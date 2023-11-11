@@ -1,4 +1,5 @@
 using FishNet.Object;
+using FishNet.Component.Animating;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
@@ -14,6 +15,7 @@ public sealed class PawnWeapon : NetworkBehaviour
 	private GameObject[] weapons;
 
 	private Animator currentWeaponAnimator;
+	private NetworkAnimator currentWeaponNetworkAnimator;
 
 	[HideInInspector]
 	public int currentWeapon;
@@ -41,6 +43,7 @@ public sealed class PawnWeapon : NetworkBehaviour
 
 		currentWeapon = 0;
 		currentWeaponAnimator = weapons[currentWeapon].GetComponent<Animator>();
+		currentWeaponNetworkAnimator = weapons[currentWeapon].GetComponent<NetworkAnimator>();
 	}
 
 	private void Update()
@@ -68,16 +71,16 @@ public sealed class PawnWeapon : NetworkBehaviour
 	void Shoot(Vector3 pos, Vector3 dir, float damage)
     {
 		ServerFire(pos, dir, damage);
-		ShootingEffects(currentWeaponAnimator);
+		ShootingEffects(currentWeaponNetworkAnimator);
 	}
 
-	void ShootingEffects(Animator animator)
+	void ShootingEffects(NetworkAnimator animator)
     {
 		animator.SetTrigger("Shoot");
 		EndShootingEffect(animator);
     }
 
-	private IEnumerator EndShootingEffect(Animator animator)
+	private IEnumerator EndShootingEffect(NetworkAnimator animator)
     {
 		yield return new WaitForSeconds(.01f);
 		animator.ResetTrigger("Shoot");
