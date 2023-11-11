@@ -1,5 +1,7 @@
 using FishNet.Object;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Collections;
 
 public sealed class PawnWeapon : NetworkBehaviour
 {
@@ -11,10 +13,11 @@ public sealed class PawnWeapon : NetworkBehaviour
 	[SerializeField]
 	private GameObject[] weapons;
 
-	[HideInInspector]
-	public WeaponData currentWeaponData;
+	private Animator currentWeaponAnimator;
 
-	[SerializeField]
+	[HideInInspector]
+	public int currentWeapon;
+
 	private Transform shootCamera;
 
 	private float _timeUntilNextShot;
@@ -35,7 +38,9 @@ public sealed class PawnWeapon : NetworkBehaviour
 				SetWeaponLayerRecursively(weapon, 3);
 			}
 		}
-		currentWeaponData = weaponStats[0];
+
+		currentWeapon = 0;
+		currentWeaponAnimator = weapons[currentWeapon].GetComponent<Animator>();
 	}
 
 	private void Update()
@@ -49,9 +54,9 @@ public sealed class PawnWeapon : NetworkBehaviour
 		{
 			if (_input.fire)
 			{
-				ServerFire(shootCamera.position, shootCamera.TransformDirection(Vector3.forward));
+				Shoot(shootCamera.position, shootCamera.TransformDirection(Vector3.forward), weaponStats[currentWeapon].damage);
 				Debug.Log("A tiré");
-				_timeUntilNextShot = currentWeaponData.firerate;
+				_timeUntilNextShot = weaponStats[currentWeapon].firerate;
 			}
 		}
 		else
@@ -60,19 +65,38 @@ public sealed class PawnWeapon : NetworkBehaviour
 		}
 	}
 
+	void Shoot(Vector3 pos, Vector3 dir, float damage)
+    {
+		ServerFire(pos, dir, damage);
+		ShootingEffects(currentWeaponAnimator);
+	}
+
+	void ShootingEffects(Animator animator)
+    {
+		animator.SetTrigger("Shoot");
+		EndShootingEffect(animator);
+    }
+
+	private IEnumerator EndShootingEffect(Animator animator)
+    {
+		yield return new WaitForSeconds(.01f);
+		animator.ResetTrigger("Shoot");
+    }
+
 	[ServerRpc]
-	private void ServerFire(Vector3 firePointPosition, Vector3 firePointDirection)
+	private void ServerFire(Vector3 firePointPosition, Vector3 firePointDirection, float damage)
 	{
 		if (Physics.Raycast(firePointPosition, firePointDirection, out RaycastHit hit) && hit.transform.parent.TryGetComponent(out Pawn pawn))
 		{
 			Debug.Log("A touché un ennemi");
-			pawn.ReceiveDamage(currentWeaponData.damage);
+			pawn.ReceiveDamage(damage);
 		}
 	}
 
 	private void SetWeaponLayerRecursively(GameObject weapon, int layer)
 	{
 		weapon.layer = layer; // met la layer 3 qui est celle de weapon
+		Debug.Log(weapon.transform.name);
 
 		// applique la layer de maniere recursive a tous les enfants
 		foreach (Transform child in weapon.transform)
