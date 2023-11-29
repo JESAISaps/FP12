@@ -18,6 +18,9 @@ public sealed class PawnMovement : NetworkBehaviour
 
 	private CharacterController _characterController;
 
+	[SerializeField]
+	private Animator playerAnimator;
+
 	private Vector3 _velocity;
 
 	public override void OnStartNetwork()
@@ -63,6 +66,6 @@ public sealed class PawnMovement : NetworkBehaviour
 
 		_characterController.Move(_velocity * Time.deltaTime);
 
-
+		playerAnimator.SetFloat("Velocity", _velocity.magnitude);
 	}
 }

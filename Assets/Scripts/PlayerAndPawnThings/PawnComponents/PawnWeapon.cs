@@ -18,7 +18,7 @@ public sealed class PawnWeapon : NetworkBehaviour
 	private NetworkAnimator currentWeaponNetworkAnimator;
 
 	[HideInInspector]
-	public int currentWeapon;
+	public int currentWeapon = 1;
 
 	private Transform shootCamera;
 
@@ -41,8 +41,20 @@ public sealed class PawnWeapon : NetworkBehaviour
 			}
 		}
 
-		currentWeapon = 0;
-		currentWeaponAnimator = weapons[currentWeapon].GetComponent<Animator>();
+		SwitchWeapon();
+	}
+
+	private void SwitchWeapon()
+    {
+
+		ChangeWeaponGraphics(false, weapons[currentWeapon]);
+		// permet d'alterner entre l'arme 1, weapon0, et l'arme 2, sniper.
+		currentWeapon = 1 - currentWeapon;
+		ChangeWeaponGraphics(true, weapons[currentWeapon]);
+
+		if (weapons[currentWeapon].GetComponent<Animator>() != null)
+			currentWeaponAnimator = weapons[currentWeapon].GetComponent<Animator>();
+
 		currentWeaponNetworkAnimator = weapons[currentWeapon].GetComponent<NetworkAnimator>();
 	}
 
@@ -61,6 +73,11 @@ public sealed class PawnWeapon : NetworkBehaviour
 				Debug.Log("A tiré");
 				_timeUntilNextShot = weaponStats[currentWeapon].firerate;
 			}
+			
+			if (_input.changeWeapon)
+            {
+				SwitchWeapon();
+            }
 		}
 		else
 		{
@@ -95,6 +112,12 @@ public sealed class PawnWeapon : NetworkBehaviour
 			pawn.ReceiveDamage(damage);
 		}
 	}
+
+	[ServerRpc]
+	private void ChangeWeaponGraphics(bool newState, GameObject toChange)
+    {
+		toChange.SetActive(newState);
+    }
 
 	private void SetWeaponLayerRecursively(GameObject weapon, int layer)
 	{
