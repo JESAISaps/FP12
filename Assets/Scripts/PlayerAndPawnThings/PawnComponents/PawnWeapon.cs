@@ -1,7 +1,6 @@
 using FishNet.Object;
 using FishNet.Component.Animating;
 using UnityEngine;
-using System.Collections.Generic;
 using System.Collections;
 
 public sealed class PawnWeapon : NetworkBehaviour
@@ -11,14 +10,15 @@ public sealed class PawnWeapon : NetworkBehaviour
 	[SerializeField]
 	private WeaponData[] weaponStats;
 	// important que l'arme et sont ScriptableObject soient en meme indice
-	[SerializeField]
-	private GameObject[] weapons;
+	public GameObject[] weapons;
 
 	private Animator currentWeaponAnimator;
 	private NetworkAnimator currentWeaponNetworkAnimator;
 
 	[HideInInspector]
-	public int currentWeapon = 1;
+	public int currentWeapon = 0;
+	[SerializeField]
+	private int defaultWeapon;
 
 	private Transform shootCamera;
 
@@ -41,21 +41,35 @@ public sealed class PawnWeapon : NetworkBehaviour
 			}
 		}
 
-		SwitchWeapon();
 	}
 
-	private void SwitchWeapon()
+    private void Start()
+    {
+		SetupWeapon();        
+    }
+
+    void SetupWeapon()
+	{
+		weapons[defaultWeapon].SetActive(true);
+		weapons[1 - defaultWeapon].SetActive(false);
+
+		currentWeaponNetworkAnimator = weapons[defaultWeapon].GetComponent<NetworkAnimator>();
+		currentWeaponAnimator = weapons[defaultWeapon].GetComponent<Animator>();
+
+	}
+
+    private void SwitchWeapon()
     {
 
-		ChangeWeaponGraphics(false, weapons[currentWeapon]);
-		// permet d'alterner entre l'arme 1, weapon0, et l'arme 2, sniper.
-		currentWeapon = 1 - currentWeapon;
-		ChangeWeaponGraphics(true, weapons[currentWeapon]);
+		ChangeWeaponGraphics(this, false, currentWeapon);
 
-		if (weapons[currentWeapon].GetComponent<Animator>() != null)
-			currentWeaponAnimator = weapons[currentWeapon].GetComponent<Animator>();
+		currentWeapon = 1 - currentWeapon;
+
+		ChangeWeaponGraphics(this, true, currentWeapon);
+
 
 		currentWeaponNetworkAnimator = weapons[currentWeapon].GetComponent<NetworkAnimator>();
+		currentWeaponAnimator = weapons[currentWeapon].GetComponent<Animator>();
 	}
 
 	private void Update()
@@ -74,15 +88,17 @@ public sealed class PawnWeapon : NetworkBehaviour
 				_timeUntilNextShot = weaponStats[currentWeapon].firerate;
 			}
 			
-			if (_input.changeWeapon)
-            {
-				SwitchWeapon();
-            }
+			
 		}
 		else
 		{
 			_timeUntilNextShot -= Time.deltaTime;
 		}
+		
+		if (_input.changeWeapon)
+        {
+			SwitchWeapon();
+        }
 	}
 
 	void Shoot(Vector3 pos, Vector3 dir, float damage)
@@ -94,14 +110,17 @@ public sealed class PawnWeapon : NetworkBehaviour
 	void ShootingEffects(NetworkAnimator animator)
     {
 		animator.SetTrigger("Shoot");
-		EndShootingEffect(animator);
+		Debug.Log(animator.name + "a joué l'aniamtion de tir");
+		//EndShootingEffect(animator);
     }
 
+	// inutile, le trigger se desactive automatiquement
+	/*
 	private IEnumerator EndShootingEffect(NetworkAnimator animator)
     {
 		yield return new WaitForSeconds(.01f);
 		animator.ResetTrigger("Shoot");
-    }
+    }*/
 
 	[ServerRpc]
 	private void ServerFire(Vector3 firePointPosition, Vector3 firePointDirection, float damage)
@@ -114,15 +133,23 @@ public sealed class PawnWeapon : NetworkBehaviour
 	}
 
 	[ServerRpc]
-	private void ChangeWeaponGraphics(bool newState, GameObject toChange)
+	private void ChangeWeaponGraphics(PawnWeapon script, bool newState, int currentWeapon)
     {
-		toChange.SetActive(newState);
-    }
+		ChangeWeaponGraphicsObserver(script, newState, currentWeapon);
+
+	}
+
+	[ObserversRpc]
+	private void ChangeWeaponGraphicsObserver(PawnWeapon script, bool newState, int currentWeapon)
+    {
+		Debug.Log(script.weapons[currentWeapon].name + " mis a " + newState.ToString());
+		// on desactive l'arme actuelle
+		script.weapons[currentWeapon].SetActive(newState);
+	}
 
 	private void SetWeaponLayerRecursively(GameObject weapon, int layer)
 	{
 		weapon.layer = layer; // met la layer 3 qui est celle de weapon
-		Debug.Log(weapon.transform.name);
 
 		// applique la layer de maniere recursive a tous les enfants
 		foreach (Transform child in weapon.transform)
@@ -135,4 +162,14 @@ public sealed class PawnWeapon : NetworkBehaviour
 			}
 		}
 	}
+
+    private void OnEnable()
+    {
+		return;
+    }
+
+    private void OnDisable()
+    {
+		return;
+    }
 }
