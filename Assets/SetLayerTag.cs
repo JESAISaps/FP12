@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using FishNet.Object;
 using UnityEngine;
 
-public class SetLayerTag : MonoBehaviour
+public class SetLayerTag : NetworkBehaviour
 {
     [SerializeField]
     private int layer;
@@ -14,13 +13,16 @@ public class SetLayerTag : MonoBehaviour
 
     void SetLayerRecursively(GameObject graphic, int layer)
     {
-        foreach (Transform child in graphic.transform)
+        if (base.Owner.IsLocalClient)
         {
-            child.gameObject.layer = layer;
-
-            if (child.GetComponentInChildren<Transform>())
+            foreach (Transform child in graphic.transform)
             {
-                SetLayerRecursively(child.gameObject, layer);
+                child.gameObject.layer = layer;
+
+                if (child.GetComponentInChildren<Transform>())
+                {
+                    SetLayerRecursively(child.gameObject, layer);
+                }
             }
         }
     }

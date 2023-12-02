@@ -147,6 +147,7 @@ public sealed class PawnWeapon : NetworkBehaviour
 		script.weapons[currentWeapon].SetActive(newState);
 	}
 
+
 	private void SetWeaponLayerRecursively(GameObject weapon, int layer)
 	{
 		weapon.layer = layer; // met la layer 3 qui est celle de weapon
@@ -162,14 +163,4 @@ public sealed class PawnWeapon : NetworkBehaviour
 			}
 		}
 	}
-
-    private void OnEnable()
-    {
-		return;
-    }
-
-    private void OnDisable()
-    {
-		return;
-    }
 }
