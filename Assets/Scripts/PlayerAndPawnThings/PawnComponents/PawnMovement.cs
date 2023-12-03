@@ -67,5 +67,7 @@ public sealed class PawnMovement : NetworkBehaviour
 		_characterController.Move(_velocity * Time.deltaTime);
 
 		playerAnimator.SetFloat("Velocity", _velocity.magnitude);
+		playerAnimator.SetFloat("x", _input.horizontal);
+		playerAnimator.SetFloat("y", _input.vertical);
 	}
 }

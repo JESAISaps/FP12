@@ -21,6 +21,9 @@ public sealed class PawnWeapon : NetworkBehaviour
 	private int defaultWeapon;
 
 	private Transform shootCamera;
+	private Transform shootPoint;
+
+	private ParticleSystem effect;
 
 	private float _timeUntilNextShot;
 
@@ -55,7 +58,8 @@ public sealed class PawnWeapon : NetworkBehaviour
 
 		currentWeaponNetworkAnimator = weapons[defaultWeapon].GetComponent<NetworkAnimator>();
 		currentWeaponAnimator = weapons[defaultWeapon].GetComponent<Animator>();
-
+		//shootPoint = weapons[defaultWeapon].GetComponentInChildren<ShootPoint>().transform;
+		effect = weapons[defaultWeapon].GetComponentInChildren<ParticleSystem>();
 	}
 
     private void SwitchWeapon()
@@ -70,6 +74,8 @@ public sealed class PawnWeapon : NetworkBehaviour
 
 		currentWeaponNetworkAnimator = weapons[currentWeapon].GetComponent<NetworkAnimator>();
 		currentWeaponAnimator = weapons[currentWeapon].GetComponent<Animator>();
+		//shootPoint = weapons[defaultWeapon].GetComponentInChildren<ShootPoint>().transform;
+		effect = weapons[currentWeapon].GetComponentInChildren<ParticleSystem>();
 	}
 
 	private void Update()
@@ -110,8 +116,21 @@ public sealed class PawnWeapon : NetworkBehaviour
 	void ShootingEffects(NetworkAnimator animator)
     {
 		animator.SetTrigger("Shoot");
-		Debug.Log(animator.name + "a joué l'aniamtion de tir");
 		//EndShootingEffect(animator);
+		DoParticleEffect();
+
+    }
+
+	[ServerRpc]
+	public void DoParticleEffect()
+    {
+		DoParticleEffectObserver();
+    }
+
+	[ObserversRpc]
+	void DoParticleEffectObserver()
+    {
+		effect.Play();
     }
 
 	// inutile, le trigger se desactive automatiquement
