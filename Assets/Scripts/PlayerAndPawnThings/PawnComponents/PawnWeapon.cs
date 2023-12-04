@@ -22,6 +22,9 @@ public sealed class PawnWeapon : NetworkBehaviour
 
 	private Transform shootCamera;
 	private Transform shootPoint;
+	private LineRenderer laserLine;
+	[SerializeField]
+	private float laserLifeTime;
 
 	private ParticleSystem effect;
 
@@ -58,8 +61,9 @@ public sealed class PawnWeapon : NetworkBehaviour
 
 		currentWeaponNetworkAnimator = weapons[defaultWeapon].GetComponent<NetworkAnimator>();
 		currentWeaponAnimator = weapons[defaultWeapon].GetComponent<Animator>();
-		//shootPoint = weapons[defaultWeapon].GetComponentInChildren<ShootPoint>().transform;
+		shootPoint = weapons[defaultWeapon].GetComponentInChildren<ShootPoint>().transform;
 		effect = weapons[defaultWeapon].GetComponentInChildren<ParticleSystem>();
+		laserLine = weapons[defaultWeapon].GetComponentInChildren<LineRenderer>();
 	}
 
     private void SwitchWeapon()
@@ -74,8 +78,9 @@ public sealed class PawnWeapon : NetworkBehaviour
 
 		currentWeaponNetworkAnimator = weapons[currentWeapon].GetComponent<NetworkAnimator>();
 		currentWeaponAnimator = weapons[currentWeapon].GetComponent<Animator>();
-		//shootPoint = weapons[defaultWeapon].GetComponentInChildren<ShootPoint>().transform;
+		shootPoint = weapons[defaultWeapon].GetComponentInChildren<ShootPoint>().transform;
 		effect = weapons[currentWeapon].GetComponentInChildren<ParticleSystem>();
+		laserLine = weapons[currentWeapon].GetComponentInChildren<LineRenderer>();
 	}
 
 	private void Update()
@@ -89,7 +94,7 @@ public sealed class PawnWeapon : NetworkBehaviour
 		{
 			if (_input.fire)
 			{
-				Shoot(shootCamera.position, shootCamera.TransformDirection(Vector3.forward), weaponStats[currentWeapon].damage);
+				Shoot(shootCamera.position, shootCamera.TransformDirection(Vector3.forward), weaponStats[currentWeapon].damage, weaponStats[currentWeapon].range);
 				Debug.Log("A tiré");
 				_timeUntilNextShot = weaponStats[currentWeapon].firerate;
 			}
@@ -107,9 +112,9 @@ public sealed class PawnWeapon : NetworkBehaviour
         }
 	}
 
-	void Shoot(Vector3 pos, Vector3 dir, float damage)
+	void Shoot(Vector3 pos, Vector3 dir, float damage, float range)
     {
-		ServerFire(pos, dir, damage);
+		ServerFire(pos, dir, damage, range);
 		ShootingEffects(currentWeaponNetworkAnimator);
 	}
 
@@ -142,14 +147,48 @@ public sealed class PawnWeapon : NetworkBehaviour
     }*/
 
 	[ServerRpc]
-	private void ServerFire(Vector3 firePointPosition, Vector3 firePointDirection, float damage)
+	private void ServerFire(Vector3 firePointPosition, Vector3 firePointDirection, float damage, float range)
 	{
-		if (Physics.Raycast(firePointPosition, firePointDirection, out RaycastHit hit) && hit.transform.parent.TryGetComponent(out Pawn pawn))
+		if (Physics.Raycast(firePointPosition, firePointDirection, out RaycastHit hit, range, 8))
 		{
-			Debug.Log("A touché un ennemi");
-			pawn.ReceiveDamage(damage);
+			if (hit.transform.parent.TryGetComponent(out Pawn pawn))
+			{
+				Debug.Log("A touché un ennemi");
+				pawn.ReceiveDamage(damage);
+				DoTrailEffect(shootPoint.position, hit.point, weaponStats[currentWeapon].laserLifeTime);
+
+			}
+			else
+            {
+				DoTrailEffect(shootPoint.position, hit.point, weaponStats[currentWeapon].laserLifeTime);
+			}
+		}
+		else
+		{
+			DoTrailEffect(shootPoint.position, shootPoint.position + (shootPoint.forward * range), weaponStats[currentWeapon].laserLifeTime);
 		}
 	}
+
+	[ServerRpc]
+	void DoTrailEffect(Vector3 start, Vector3 end, float timeToWait)
+    {
+		ObserverDoTrailEffect(start, end, timeToWait);
+    }
+
+	[ObserversRpc]
+	void ObserverDoTrailEffect(Vector3 start, Vector3 end, float timeToWait)
+	{
+		laserLine.SetPosition(0, start);
+		laserLine.SetPosition(1, end);
+		StartCoroutine(ShootLaser(timeToWait));
+	}
+
+	IEnumerator ShootLaser(float timeToWait)
+    {
+		laserLine.enabled = true;
+		yield return new WaitForSeconds(timeToWait);
+		laserLine.enabled = false;
+    }
 
 	[ServerRpc]
 	private void ChangeWeaponGraphics(PawnWeapon script, bool newState, int currentWeapon)

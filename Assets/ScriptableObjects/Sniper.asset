@@ -15,5 +15,4 @@ MonoBehaviour:
   range: 100000
   damage: 1000
   firerate: 1
-  shootEffect: {fileID: 6849787189653679379, guid: 2e6743004535522479cc2dc9ee639f40,
-    type: 3}
+  laserLifeTime: 0.75
