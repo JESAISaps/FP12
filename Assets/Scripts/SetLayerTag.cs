@@ -15,9 +15,11 @@ public class SetLayerTag : NetworkBehaviour
     {
         if (base.Owner.IsLocalClient)
         {
+            graphic.layer = layer;
+
             foreach (Transform child in graphic.transform)
             {
-                child.gameObject.layer = layer;
+                //child.gameObject.layer = layer;
 
                 if (child.GetComponentInChildren<Transform>())
                 {

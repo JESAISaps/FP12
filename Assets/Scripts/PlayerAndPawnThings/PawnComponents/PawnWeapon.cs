@@ -26,6 +26,9 @@ public sealed class PawnWeapon : NetworkBehaviour
 	[SerializeField]
 	private float laserLifeTime;
 
+	[SerializeField]
+	private LayerMask ignoreOnShootRaycast;
+
 	private ParticleSystem effect;
 
 	private float _timeUntilNextShot;
@@ -70,15 +73,12 @@ public sealed class PawnWeapon : NetworkBehaviour
     {
 
 		ChangeWeaponGraphics(this, false, currentWeapon);
-
 		currentWeapon = 1 - currentWeapon;
-
 		ChangeWeaponGraphics(this, true, currentWeapon);
-
 
 		currentWeaponNetworkAnimator = weapons[currentWeapon].GetComponent<NetworkAnimator>();
 		currentWeaponAnimator = weapons[currentWeapon].GetComponent<Animator>();
-		shootPoint = weapons[defaultWeapon].GetComponentInChildren<ShootPoint>().transform;
+		shootPoint = weapons[currentWeapon].GetComponentInChildren<ShootPoint>().transform;
 		effect = weapons[currentWeapon].GetComponentInChildren<ParticleSystem>();
 		laserLine = weapons[currentWeapon].GetComponentInChildren<LineRenderer>();
 	}
@@ -149,7 +149,7 @@ public sealed class PawnWeapon : NetworkBehaviour
 	[ServerRpc]
 	private void ServerFire(Vector3 firePointPosition, Vector3 firePointDirection, float damage, float range)
 	{
-		if (Physics.Raycast(firePointPosition, firePointDirection, out RaycastHit hit, range, 8))
+		if (Physics.Raycast(firePointPosition, firePointDirection, out RaycastHit hit, range, ~ignoreOnShootRaycast))
 		{
 			if (hit.transform.parent.TryGetComponent(out Pawn pawn))
 			{

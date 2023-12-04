@@ -407,6 +407,9 @@ MonoBehaviour:
   currentWeapon: 0
   defaultWeapon: 0
   laserLifeTime: 0.075
+  ignoreOnShootRaycast:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1 &7565916520176687696
 GameObject:
   m_ObjectHideFlags: 0
@@ -881,7 +884,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d0a99caade0a68842b2274726d1bc7c3, type: 2}
+  - {fileID: 2100000, guid: 997fc4a5ccc62814697fc91eb139e535, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
