@@ -8,6 +8,9 @@ public sealed class PawnWeapon : NetworkBehaviour
 	private PawnInput _input;
 
 	[SerializeField]
+	private ChangeTarget changeHandTarget;
+
+	[SerializeField]
 	private WeaponData[] weaponStats;
 	// important que l'arme et sont ScriptableObject soient en meme indice
 	public GameObject[] weapons;
@@ -20,7 +23,7 @@ public sealed class PawnWeapon : NetworkBehaviour
 	[SerializeField]
 	private int defaultWeapon;
 
-	private Transform shootCamera;
+	public Transform shootCamera;
 	private Transform shootPoint;
 	private LineRenderer laserLine;
 	[SerializeField]
@@ -67,6 +70,8 @@ public sealed class PawnWeapon : NetworkBehaviour
 		shootPoint = weapons[defaultWeapon].GetComponentInChildren<ShootPoint>().transform;
 		effect = weapons[defaultWeapon].GetComponentInChildren<ParticleSystem>();
 		laserLine = weapons[defaultWeapon].GetComponentInChildren<LineRenderer>();
+
+		changeHandTarget.ChangeHandleTarget(defaultWeapon);
 	}
 
     private void SwitchWeapon()
@@ -81,6 +86,8 @@ public sealed class PawnWeapon : NetworkBehaviour
 		shootPoint = weapons[currentWeapon].GetComponentInChildren<ShootPoint>().transform;
 		effect = weapons[currentWeapon].GetComponentInChildren<ParticleSystem>();
 		laserLine = weapons[currentWeapon].GetComponentInChildren<LineRenderer>();
+
+		changeHandTarget.ChangeHandleTarget(currentWeapon);
 	}
 
 	private void Update()
@@ -106,7 +113,7 @@ public sealed class PawnWeapon : NetworkBehaviour
 			_timeUntilNextShot -= Time.deltaTime;
 		}
 		
-		if (_input.changeWeapon)
+		if (_input.changeWeapon && !Input.GetKey(KeyCode.Mouse1))
         {
 			SwitchWeapon();
         }
@@ -155,25 +162,25 @@ public sealed class PawnWeapon : NetworkBehaviour
 			{
 				Debug.Log("A touché un ennemi");
 				pawn.ReceiveDamage(damage);
-				DoTrailEffect(shootPoint.position, hit.point, weaponStats[currentWeapon].laserLifeTime);
+				ObserverDoTrailEffect(shootPoint.position, hit.point, weaponStats[currentWeapon].laserLifeTime);
 
 			}
 			else
             {
-				DoTrailEffect(shootPoint.position, hit.point, weaponStats[currentWeapon].laserLifeTime);
+				ObserverDoTrailEffect(shootPoint.position, hit.point, weaponStats[currentWeapon].laserLifeTime);
 			}
 		}
 		else
 		{
-			DoTrailEffect(shootPoint.position, shootPoint.position + (shootPoint.forward * range), weaponStats[currentWeapon].laserLifeTime);
+			ObserverDoTrailEffect(shootPoint.position, shootPoint.position + (shootPoint.forward * range), weaponStats[currentWeapon].laserLifeTime);
 		}
 	}
-
+	/*
 	[ServerRpc]
 	void DoTrailEffect(Vector3 start, Vector3 end, float timeToWait)
     {
 		ObserverDoTrailEffect(start, end, timeToWait);
-    }
+    }*/
 
 	[ObserversRpc]
 	void ObserverDoTrailEffect(Vector3 start, Vector3 end, float timeToWait)
@@ -208,11 +215,13 @@ public sealed class PawnWeapon : NetworkBehaviour
 
 	private void SetWeaponLayerRecursively(GameObject weapon, int layer)
 	{
+		//if(!weapon.CompareTag("DontChangeLayer"))
 		weapon.layer = layer; // met la layer 3 qui est celle de weapon
 
 		// applique la layer de maniere recursive a tous les enfants
 		foreach (Transform child in weapon.transform)
 		{
+			//if(!child.gameObject.CompareTag("DontChangeLayer"))
 			child.gameObject.layer = layer;
 
 			if (child.GetComponentInChildren<Transform>())

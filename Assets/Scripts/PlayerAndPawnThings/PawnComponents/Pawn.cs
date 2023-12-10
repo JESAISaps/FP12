@@ -9,6 +9,8 @@ public sealed class Pawn : NetworkBehaviour
 	[SyncVar]
 	public float health;
 
+	public PawnWeapon weaponScript;
+
 	public void ReceiveDamage(float amount)
 	{
 		if (!IsSpawned)

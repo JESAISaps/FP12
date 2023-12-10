@@ -7,12 +7,19 @@ public sealed class PawnCameraLook : NetworkBehaviour
 
 	[SerializeField]
 	private Transform myCamera;
+	private Camera myCameraCamera;
+	private Pawn pawnScript;
 
 	[SerializeField]
 	private float xMin;
 
 	[SerializeField]
 	private float xMax;
+
+	[SerializeField]
+	private int defaultFOV;
+	[SerializeField]
+	private int sniperFOV;
 
 	private Vector3 _eulerAngles;
 
@@ -30,6 +37,12 @@ public sealed class PawnCameraLook : NetworkBehaviour
 		myCamera.GetComponent<Camera>().enabled = IsOwner;
 
 		myCamera.GetComponent<AudioListener>().enabled = IsOwner;
+
+        if (IsOwner)
+        {
+			myCameraCamera = myCamera.GetComponent<Camera>();
+			pawnScript = GetComponent<Pawn>();
+        }
 	}
 
 	private void Update()
@@ -46,5 +59,17 @@ public sealed class PawnCameraLook : NetworkBehaviour
 		myCamera.localEulerAngles = _eulerAngles;
 
 		transform.Rotate(0.0f, _input.mouseX, 0.0f, Space.World);
+
+		if (pawnScript.weaponScript.currentWeapon == 1)
+		{
+			if (Input.GetKeyDown(KeyCode.Mouse1))
+			{
+				myCameraCamera.fieldOfView = sniperFOV;
+			}
+			if (Input.GetKeyUp(KeyCode.Mouse1))
+			{
+				myCameraCamera.fieldOfView = defaultFOV;
+			}
+		}
 	}
 }
