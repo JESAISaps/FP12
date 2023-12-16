@@ -53,11 +53,11 @@ public sealed class Player : NetworkBehaviour
 		{
 			return;
 		}
-
+		/*
 		if (Input.GetKeyDown(KeyCode.R))
 		{
 			ServerSetIsReady(!isReady);
-		}
+		}*/
 	}
 
 	public void StartGame()
@@ -93,6 +93,11 @@ public sealed class Player : NetworkBehaviour
 	public void ServerSetIsReady(bool value)
 	{
 		isReady = value;
+		if (isReady)
+		{
+			StartGame();
+			Debug.Log("Player has started");
+        }
 	}
 
 	[TargetRpc]

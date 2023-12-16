@@ -114,15 +114,18 @@ public sealed class PawnWeapon : NetworkBehaviour
 
 	void Shoot(Vector3 pos, Vector3 dir, float damage, float range)
     {
-		ServerFire(pos, dir, damage, range);
 		ShootingEffects(currentWeaponNetworkAnimator);
+		ServerFire(pos, dir, damage, range);
 	}
 
 	void ShootingEffects(NetworkAnimator animator)
     {
 		animator.SetTrigger("Shoot");
 		//EndShootingEffect(animator);
-		DoParticleEffect();
+		if (IsOwner)
+			effect.Play();
+		else
+			DoParticleEffect();
 
     }
 
