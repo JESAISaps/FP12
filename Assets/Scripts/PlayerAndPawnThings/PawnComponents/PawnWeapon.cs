@@ -14,6 +14,8 @@ public sealed class PawnWeapon : NetworkBehaviour
 
 	private Animator currentWeaponAnimator;
 	private NetworkAnimator currentWeaponNetworkAnimator;
+	[SerializeField]
+	private ChangeTarget changeHandTarget;
 
 	[HideInInspector]
 	public int currentWeapon = 0;
@@ -52,10 +54,11 @@ public sealed class PawnWeapon : NetworkBehaviour
 
 	}
 
-    private void Start()
+	void Start()
     {
-		SetupWeapon();        
-    }
+		// dans la start car si on la met dans OnStartNetwork alors les setactive du sniper ne marchent pas
+		SetupWeapon();
+	}
 
     void SetupWeapon()
 	{
@@ -67,6 +70,7 @@ public sealed class PawnWeapon : NetworkBehaviour
 		shootPoint = weapons[defaultWeapon].GetComponentInChildren<ShootPoint>().transform;
 		effect = weapons[defaultWeapon].GetComponentInChildren<ParticleSystem>();
 		laserLine = weapons[defaultWeapon].GetComponentInChildren<LineRenderer>();
+		changeHandTarget.ChangeHandleTarget(defaultWeapon);
 	}
 
     private void SwitchWeapon()
@@ -81,6 +85,7 @@ public sealed class PawnWeapon : NetworkBehaviour
 		shootPoint = weapons[currentWeapon].GetComponentInChildren<ShootPoint>().transform;
 		effect = weapons[currentWeapon].GetComponentInChildren<ParticleSystem>();
 		laserLine = weapons[currentWeapon].GetComponentInChildren<LineRenderer>();
+		changeHandTarget.ChangeHandleTarget(currentWeapon);
 	}
 
 	private void Update()
