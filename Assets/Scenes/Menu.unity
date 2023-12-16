@@ -272,6 +272,7 @@ GameObject:
   - component: {fileID: 787896263}
   - component: {fileID: 787896265}
   - component: {fileID: 787896266}
+  - component: {fileID: 787896267}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -346,6 +347,25 @@ MonoBehaviour:
     type: 3}
   _addToDefaultScene: 0
   Spawns: []
+--- !u!114 &787896267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 787896262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f48f002b825cbd45a19bd96d90f9edb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _unreliableMTU: 1023
+  _ipv4BindAddress: 
+  _ipv6BindAddress: 
+  _port: 39628
+  _maximumClients: 4095
+  _clientAddress: 4jx39q.edge.hathora.dev
+  _timeout: 15
 --- !u!1 &890134143
 GameObject:
   m_ObjectHideFlags: 0

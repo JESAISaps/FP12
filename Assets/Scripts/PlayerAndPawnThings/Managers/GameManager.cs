@@ -24,7 +24,7 @@ public sealed class GameManager : NetworkBehaviour
 			return;
 		}
 
-		canStart = players.All(player => player.isReady);
+		canStart = true; //players.All(player => player.isReady);
 	}
 
 	[Server]
