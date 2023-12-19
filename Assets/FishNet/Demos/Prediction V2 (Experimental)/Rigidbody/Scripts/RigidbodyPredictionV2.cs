@@ -72,6 +72,7 @@ namespace FishNet.PredictionV2
                 if (Input.GetKeyDown(KeyCode.Space))
                     _jump = true;
             }
+
         }
 
         public override void OnStartNetwork()
@@ -141,9 +142,14 @@ namespace FishNet.PredictionV2
             //    _rigidbody.velocity *= 0.75f;
 
             //Vector3 forces = new Vector3(md.Horizontal, 0f, md.Vertical) * _moveRate;
-            _rigidbody.AddForce(transform.forward * md.Vertical * _moveRate + transform.right * md.Horizontal * _moveRate);
+            //_rigidbody.AddForce(transform.forward * md.Vertical * _moveRate + transform.right * md.Horizontal * _moveRate);
 
-            if (md.Jump)
+            Vector2 axis = new Vector2(md.Vertical, md.Horizontal) * _moveRate;
+            Vector3 forward = new Vector3(-Camera.main.transform.right.z, 0, Camera.main.transform.right.x);
+            Vector3 wishDirection = (forward * axis.x + Camera.main.transform.right * axis.y + Vector3.up * _rigidbody.velocity.y);
+            _rigidbody.velocity = wishDirection;
+
+            if (md.Jump && Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), 1.01f))
                 _rigidbody.AddForce(new Vector3(0f, _jumpForce, 0f), ForceMode.Impulse);
             //Add gravity to make the object fall faster.
             _rigidbody.AddForce(Physics.gravity * 3f);
@@ -164,7 +170,7 @@ namespace FishNet.PredictionV2
         private void Reconciliation(ReconcileData rd, Channel channel = Channel.Unreliable)
         {
             transform.position = rd.Position;
-            transform.rotation = rd.Rotation;
+            //transform.rotation = rd.Rotation;
             _rigidbody.velocity = rd.Velocity;
             _rigidbody.angularVelocity = rd.AngularVelocity;
         }

@@ -1,5 +1,49 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &673784989417680628
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3074393637387184293}
+  - component: {fileID: 3208678208395674224}
+  m_Layer: 0
+  m_Name: GroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3074393637387184293
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 673784989417680628}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.006, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1196295501429632777}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3208678208395674224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 673784989417680628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1fe0025a9a881e4b9937bbdf544ea23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1708530768987137578
 GameObject:
   m_ObjectHideFlags: 0
@@ -42,6 +86,7 @@ Transform:
   - {fileID: 2283742608342873770}
   - {fileID: 8461506341602805541}
   - {fileID: 781930529723582511}
+  - {fileID: 3074393637387184293}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2399309331225412074
@@ -82,6 +127,7 @@ MonoBehaviour:
   - {fileID: -5788043259236571759}
   - {fileID: 8564417480758239644}
   - {fileID: 6744032790565079754}
+  - {fileID: 6637365076029261417}
   - {fileID: 1451777128956588993}
   - {fileID: 5832636845945965861}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
@@ -103,7 +149,7 @@ MonoBehaviour:
     CollisionPercent: 0.0625
     CollisionStep: 1
     NormalStep: 0.25
-  <PrefabId>k__BackingField: 2
+  <PrefabId>k__BackingField: 3
   <SpawnableCollectionId>k__BackingField: 0
   _scenePathHash: 0
   <SceneId>k__BackingField: 0
@@ -272,7 +318,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 2399309331225412074}
   _networkObjectCache: {fileID: 2399309331225412074}
   _jumpForce: 15
-  _moveRate: 50
+  _moveRate: 7
 --- !u!54 &115140576184520400
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -297,7 +343,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &2987279009776461934
@@ -368,7 +414,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cc0368d64cb6f641945bd388baf109f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 7
+  _componentIndexCache: 8
   _addedNetworkObject: {fileID: 2399309331225412074}
   _networkObjectCache: {fileID: 2399309331225412074}
   layer: 8
@@ -463,7 +509,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 481cca01d969f704696e20f250fccc23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 8
+  _componentIndexCache: 9
   _addedNetworkObject: {fileID: 2399309331225412074}
   _networkObjectCache: {fileID: 2399309331225412074}
   weaponStats:
@@ -620,6 +666,7 @@ GameObject:
   - component: {fileID: 109008698414626409}
   - component: {fileID: 2291234491438386386}
   - component: {fileID: 6744032790565079754}
+  - component: {fileID: 6637365076029261417}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -793,6 +840,21 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
+--- !u!114 &6637365076029261417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7719559182842121925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dcdfa405cfaaef47a91db4b5e024deb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 7
+  _addedNetworkObject: {fileID: 2399309331225412074}
+  _networkObjectCache: {fileID: 2399309331225412074}
 --- !u!1001 &128279209808064173
 PrefabInstance:
   m_ObjectHideFlags: 0
