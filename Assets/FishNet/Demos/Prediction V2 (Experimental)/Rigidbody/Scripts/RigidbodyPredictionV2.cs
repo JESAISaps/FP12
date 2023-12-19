@@ -140,8 +140,8 @@ namespace FishNet.PredictionV2
             //if (state == ReplicateState.ReplayedPredicted || state == ReplicateState.Predicted)
             //    _rigidbody.velocity *= 0.75f;
 
-            Vector3 forces = new Vector3(md.Horizontal, 0f, md.Vertical) * _moveRate;
-            _rigidbody.AddForce(forces);
+            //Vector3 forces = new Vector3(md.Horizontal, 0f, md.Vertical) * _moveRate;
+            _rigidbody.AddForce(transform.forward * md.Vertical * _moveRate + transform.right * md.Horizontal * _moveRate);
 
             if (md.Jump)
                 _rigidbody.AddForce(new Vector3(0f, _jumpForce, 0f), ForceMode.Impulse);
