@@ -25,8 +25,11 @@ public class PlayerController : NetworkBehaviour
     [SerializeField]
     private float cameraYOffset = 0.4f;
     private Camera playerCamera;
+    [SerializeField]
+    private Camera sceneCamera;
 
-
+    [SerializeField]
+    private GameManager gameManager;
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -35,11 +38,16 @@ public class PlayerController : NetworkBehaviour
             playerCamera = Camera.main;
             playerCamera.transform.position = new Vector3(transform.position.x, transform.position.y + cameraYOffset, transform.position.z);
             playerCamera.transform.SetParent(transform);
-        }
+        }/*
         else
         {
             gameObject.GetComponent<PlayerController>().enabled = false;
-        }
+        }*/
+    }
+
+    public void DetachCamera()
+    {
+        playerCamera.transform.SetParent(null, false);
     }
 
     void Start()
@@ -53,6 +61,10 @@ public class PlayerController : NetworkBehaviour
 
     void Update()
     {
+        //ligne pour les test build
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Cursor.lockState = CursorLockMode.None;
+
         bool isRunning = false;
 
         // Press Left Shift to run
