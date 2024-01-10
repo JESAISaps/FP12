@@ -40,8 +40,8 @@ namespace Hathora.Core.Scripts.Editor.Common
         
         public const string HATHORA_DOCS_URL = "https://docs.hathora.dev";
         public const string HATHORA_DOCS_DEMO_PROJECTS_URL = "https://github.com/hathora";
-        public const string HATHORA_DOCS_GETTING_STARTED_URL = "https://hathora.dev/docs/engines/unity/";
-        public const string HATHORA_DOCS_UNITY_TUTORIAL_URL = "https://hathora.dev/docs/engines/unity/beginners-tutorial";
+        public const string HATHORA_DOCS_GETTING_STARTED_URL = "https://hathora.dev/docs/get-started";
+        public const string HATHORA_DOCS_UNITY_TUTORIAL_URL = "https://github.com/hathora/hathora-unity";
         public const string HATHORA_DISCORD_URL = "https://discord.gg/hathora";
         #endregion // Links
         
@@ -275,7 +275,7 @@ namespace Hathora.Core.Scripts.Editor.Common
                 ? $"/c {_cmdWithArgs}" 
                 : $"-c \"{_cmdWithArgs}\"";
             
-            Debug.Log($"[HathoraEditorUtils.ExecuteCrossPlatformShellCmdAsync] Details: " +
+            Debug.Log($"[HathoraEditorUtils.ExecuteCrossPlatformShellCmdAsync] " +
                 $"\nshell: <color=yellow>{shell}</color>, " +
                 $"\nworkingDir: <color=yellow>{_workingDirPath}</color>, " +
                 $"\ncmd+args: <color=yellow>`{_cmdWithArgs}`</color>");

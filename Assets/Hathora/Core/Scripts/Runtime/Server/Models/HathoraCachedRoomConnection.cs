@@ -2,12 +2,11 @@
 
 using System;
 using System.Globalization;
+using Hathora.Cloud.Sdk.Model;
 using Hathora.Core.Scripts.Runtime.Common.Extensions;
+using Hathora.Core.Scripts.Runtime.Common.Models;
 using Hathora.Core.Scripts.Runtime.Common.Utils;
-using Hathora.Core.Scripts.Runtime.Server.Models.SerializedWrappers;
-using HathoraCloud.Models.Shared;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Hathora.Core.Scripts.Runtime.Server.Models
 {
@@ -18,33 +17,31 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models
     public class HathoraCachedRoomConnection
     {
         [SerializeField]
-        private Region _hathoraRegion = HathoraUtils.DEFAULT_REGION;
+        private Region _hathoraRegion = Region.Seattle;
         public Region HathoraRegion
         {
             get => _hathoraRegion;
             set => _hathoraRegion = value;
         }
 
-        /// <summary>Washington_DC => "Washington DC"</summary>
+        /// <summary>WashingtonDC => "Washington DC"</summary>
         public string GetFriendlyRegionStr() => 
             Enum.GetName(typeof(Region), _hathoraRegion)?.SplitPascalCase();
         
         [SerializeField]
-        private RoomSerializable _roomSerializable;
+        private RoomWrapper _roomWrapper;
         public Room Room
         {
-            get => _roomSerializable.ToRoomType();
-            set => _roomSerializable = new RoomSerializable(value);
+            get => _roomWrapper?.ToRoomType();
+            set => _roomWrapper = new RoomWrapper(value);
         }
         
-        [FormerlySerializedAs("_connectionInfoV2")]
-        [FormerlySerializedAs("_connectionInfoV2Wrapper")]
         [SerializeField]
-        private ConnectionInfoV2Serializable _connectionInfoV2Serializable;
+        private ConnectionInfoV2Wrapper _connectionInfoV2Wrapper;
         public ConnectionInfoV2 ConnectionInfoV2
         {
-            get => _connectionInfoV2Serializable.ToConnectionInfoV2Type();
-            set => _connectionInfoV2Serializable = new ConnectionInfoV2Serializable(value);
+            get => _connectionInfoV2Wrapper?.ToConnectionInfoV2Type();
+            set => _connectionInfoV2Wrapper = new ConnectionInfoV2Wrapper(value);
         }
 
         public bool IsError { get; set; }
@@ -55,6 +52,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models
             Room _room, 
             ConnectionInfoV2 _connectionInfoV2)
         {
+            // (!) We use `public` setters in case there are SDK wrapper workarounds
             this.HathoraRegion = _region;
             this.Room = _room;
             this.ConnectionInfoV2 = _connectionInfoV2;
@@ -73,13 +71,13 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models
         /// <returns></returns>
         public string GetConnInfoStr()
         {
-            string hostStr = _connectionInfoV2Serializable == null
+            string hostStr = _connectionInfoV2Wrapper == null
                 ? "<MissingHost>"
-                : _connectionInfoV2Serializable?.ExposedPort?.Host ?? "<MissingHost>";
+                : _connectionInfoV2Wrapper?.ExposedPort?.Host ?? "<MissingHost>";
 
-            double portDbl = _connectionInfoV2Serializable == null
+            double portDbl = _connectionInfoV2Wrapper == null
                 ? 0
-                : _connectionInfoV2Serializable?.ExposedPort?.Port ?? 0;
+                : _connectionInfoV2Wrapper?.ExposedPort?.Port ?? 0;
             
             string portStr = portDbl > 0 
                 ? portDbl.ToString(CultureInfo.InvariantCulture)

@@ -2,21 +2,18 @@
 
 using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Hathora.Core.Scripts.Runtime.Server.Models
 {
     [Serializable]
     public class HathoraDevAuthTokenOpts
     {
-        [FormerlySerializedAs("_devAuthToken")]
         [SerializeField]
-        private string _hathoraDevToken;
-
-        public string HathoraDevToken
+        private string _devAuthToken;
+        public string DevAuthToken
         {
-            get => _hathoraDevToken;
-            set => _hathoraDevToken = value;
+            get => _devAuthToken;
+            set => _devAuthToken = value;
         }
 
         [SerializeField, Tooltip("Deletes an existing refresh_token, if exists from cached file")]
@@ -32,6 +29,6 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models
         
         
         // Public utils
-        public bool HasAuthToken => !string.IsNullOrEmpty(_hathoraDevToken);
+        public bool HasAuthToken => !string.IsNullOrEmpty(_devAuthToken);
     }
 }

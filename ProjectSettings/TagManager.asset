@@ -3,20 +3,18 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - CinemachineTarget
-  - HealthText
+  tags: []
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Weapon
+  - 
   - Water
   - UI
   - 
   - 
-  - Character
-  - Ground
+  - 
+  - 
   - 
   - 
   - 

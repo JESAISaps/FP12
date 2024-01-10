@@ -1,8 +1,8 @@
 // dylan@hathora.dev
 
+using Hathora.Cloud.Sdk.Model;
 using UnityEngine;
 using System;
-using HathoraCloud.Models.Shared;
 using UnityEngine.Serialization;
 
 namespace Hathora.Core.Scripts.Runtime.Server.Models
@@ -11,22 +11,45 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models
     public class HathoraLobbyRoomOpts
     {
         #region Hathora Region
+        /// <summary>
+        /// (!) Hathora SDK Enums starts at index 1; not 0: Care of indexes.
+        /// Since this Enum isn't alphabatized, also care if you Sort() the list.
+        /// </summary>
         [SerializeField]
-        private int _hathoraRegionIndex = (int)Region.Seattle;
-
-        /// <summary>(!) Hathora SDK Enums starts at index 1; not 0: Care of indexes</summary>
-        public int HathoraRegionIndex
+        private Region _hathoraRegion = Region.Seattle;
+        
+        /// <summary>
+        /// (!) Hathora SDK Enums starts at index 1; not 0: Care of indexes.
+        /// Since this Enum isn't alphabatized, also care if you Sort() the list.
+        /// </summary>
+        public Region HathoraRegion
         {
-            get => _hathoraRegionIndex;
-            set => _hathoraRegionIndex = value;
+            get => (int)_hathoraRegion == 0
+                ? Region.Seattle // Fallback for 0-based index
+                : _hathoraRegion;
+            
+            set => _hathoraRegion = value;
         }
 
-        public Region HathoraRegion => 
-            (Region)_hathoraRegionIndex;
-        #endregion // Hathora Region
+        /// <summary>
+        /// (!) Hathora SDK Enums starts at index 1; not 0: Care of indexes.
+        /// Since this Enum isn't alphabatized, also care if you Sort() the list.
+        /// </summary>
+        [FormerlySerializedAs("hathoraRegionSelectedIndexUi")]
+        [SerializeField]
+        private int _hathoraRegionSelectedIndexUi = (int)Region.Seattle;
         
-        
-        #region Cached Room Connection
+        /// <summary>
+        /// (!) Hathora SDK Enums starts at index 1; not 0: Care of indexes.
+        /// Since this Enum isn't alphabatized, also care if you Sort() the list.
+        /// </summary>
+        public int SortedRegionSelectedIndexUi
+        {
+            get => _hathoraRegionSelectedIndexUi;
+            set => _hathoraRegionSelectedIndexUi = value;
+        }
+
+
         // [SerializeField] // While Rooms last only 5m, don't actually persist this
         private HathoraCachedRoomConnection _lastCreatedRoomConnection;
         public HathoraCachedRoomConnection LastCreatedRoomConnection
@@ -35,7 +58,6 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models
             set => _lastCreatedRoomConnection = value;
         }
 
-        
         /// <summary>
         /// We check if there's a RoomId, and null checking leading up to it.
         /// </summary>
@@ -47,7 +69,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models
         /// Checks if room has IsError *only*. Returns false if connection is null.
         /// </summary>
         public bool HasLastCreatedRoomConnectionErr => _lastCreatedRoomConnection?.IsError ?? false;
-        #endregion // Cached Room Connection
+        #endregion // Hathora Region
     }
 }
  
