@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 022a2291b89c82040a8bd048c0fdd537, type: 3}
+  m_Name: HathoraServerConfig
+  m_EditorClassIdentifier: 
+  _hathoraCoreOpts:
+    _appId: 
+    _existingAppsSelectedIndex: 0
+    _existingAppsWithDeploymentWrapper:
+    - _appId: app-53755e70-3b33-4ed4-a22b-b453e74ad402
+      _createdAtWrapper: 12/14/2023 20:31:34
+      _createdBy: 
+      _deletedBy: 
+      _deletedAtWrapper: 
+      _orgId: google-oauth2|112043151147885955418
+      _appSecret: secret-51f6063d-e5fe-4fde-9e9f-4bb1e7db1209
+      _appName: fp12
+      _deploymentWrapper:
+        _planName: 1
+        _transportType: 2
+        _roomsPerProcess: 1
+        _additionalContainerPorts: []
+        _defaultContainerPortWrapper:
+          _transportType: 2
+          _portNumber: 7770
+        _createdAtWrapper: 01/09/2024 15:50:37
+        _createdBy: nicolas.strekowski@gmail.com
+        _requestedMemoryMB: 1024
+        _requestedCPU: 0.5
+        _deploymentId: 21
+        _buildId: 21
+        _appId: app-53755e70-3b33-4ed4-a22b-b453e74ad402
+    - _appId: app-e7b43c87-705d-481e-b689-6b25e65b2229
+      _createdAtWrapper: 01/09/2024 19:15:05
+      _createdBy: 
+      _deletedBy: 
+      _deletedAtWrapper: 
+      _orgId: google-oauth2|112043151147885955418
+      _appSecret: secret-36c79e35-ea4b-483c-b1fa-c5e93a8b746a
+      _appName: testlobby
+      _deploymentWrapper:
+        _planName: 1
+        _transportType: 2
+        _roomsPerProcess: 1
+        _additionalContainerPorts: []
+        _defaultContainerPortWrapper:
+          _transportType: 2
+          _portNumber: 7777
+        _createdAtWrapper: 01/09/2024 19:21:04
+        _createdBy: nicolas.strekowski@gmail.com
+        _requestedMemoryMB: 1024
+        _requestedCPU: 0.5
+        _deploymentId: 1
+        _buildId: 1
+        _appId: app-e7b43c87-705d-481e-b689-6b25e65b2229
+    _devAuthOpts:
+      _devAuthToken: Mt2l1c67FIqT5HsjvD9zzOh6or2USo5wqo-RYSFXnv1bz
+      _forceNewToken: 0
+  _linuxHathoraAutoBuildOpts:
+    _serverBuildDirName: Build-Server
+    _serverBuildExeName: Hathora-Unity_LinuxServer.x86_64
+    _isDevBuild: 1
+    _cleanBuildDir: 1
+    _overwriteDockerfile: 1
+  _hathoraDeployOpts:
+    _roomsPerProcess: 1
+    _planNameSelectedIndex: 1
+    _containerPortWrapper:
+      _transportType: 2
+      _portNumber: 7777
+    _transportTypeSelectedIndex: 2
+    _envVars: []
+    _advancedDeployOpts:
+      _keepTempDir: 0
+      additionalTransportInfo1:
+        _transportType: 2
+        _portNumber: 7777
+        _transportNickname: 
+      additionalTransportInfo2:
+        _transportType: 2
+        _portNumber: 7777
+        _transportNickname: 
+  _hathoraLobbyRoomOpts:
+    _hathoraRegion: 1
+    _hathoraRegionSelectedIndexUi: 1

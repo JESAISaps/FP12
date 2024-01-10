@@ -1,13 +1,11 @@
 // Created by dylan@hathora.dev
 
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Hathora.Core.Scripts.Runtime.Server;
 using Hathora.Core.Scripts.Runtime.Server.Models;
-using HathoraCloud.Models.Shared;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
@@ -19,11 +17,8 @@ namespace Hathora.Core.Scripts.Editor.Server.ConfigStyle.PostAuth
     {
         #region Vars
         // Foldouts
-        private bool isBuildFoldout;
+        private bool isServerBuildFoldout;
         private CancellationTokenSource cancelBuildTokenSrc;
-        
-        /// <summary>For state persistence on which dropdown group was last clicked</summary>
-        protected const string SERVER_BUILD_SETTINGS_FOLDOUT_STATE_KEY = "ServerBuildSettingsFoldoutState";
         #endregion // Vars
 
 
@@ -50,22 +45,11 @@ namespace Hathora.Core.Scripts.Editor.Server.ConfigStyle.PostAuth
 
         private void insertServerBuildSettingsFoldout()
         {
-            // Retrieve the saved foldout state from EditorPrefs
-            isBuildFoldout = EditorPrefs.GetBool(
-                SERVER_BUILD_SETTINGS_FOLDOUT_STATE_KEY, 
-                defaultValue: false);
-            
-            // Create the foldout
-            isBuildFoldout = EditorGUILayout.BeginFoldoutHeaderGroup(
-                isBuildFoldout,
+            isServerBuildFoldout = EditorGUILayout.BeginFoldoutHeaderGroup(
+                isServerBuildFoldout,
                 "Server Build Settings");
-            
-            // Save the new foldout state to EditorPrefs
-            EditorPrefs.SetBool(
-                SERVER_BUILD_SETTINGS_FOLDOUT_STATE_KEY, 
-                isBuildFoldout);
 
-            if (!isBuildFoldout)
+            if (!isServerBuildFoldout)
             {
                 EditorGUILayout.EndFoldoutHeaderGroup();
                 return;
@@ -84,12 +68,11 @@ namespace Hathora.Core.Scripts.Editor.Server.ConfigStyle.PostAuth
         {
             insertBuildDirNameHorizGroup();
             insertBuildFileExeNameHorizGroup();
-            insertScriptingBackendHorizGroup();
             insertOverwriteDockerfileToggleHorizGroup();
 
             InsertSpace2x();
             
-            bool enableBuildBtn = ServerConfig.MeetsBuildBtnReqs();
+            bool enableBuildBtn = ServerConfig.MeetsBuildAndDeployBtnReqs();
             if (!enableBuildBtn && !HathoraServerDeploy.IsDeploying)
                 insertGenerateServerBuildBtnHelpboxOnMissingReqs();
             else
@@ -145,6 +128,7 @@ namespace Hathora.Core.Scripts.Editor.Server.ConfigStyle.PostAuth
                 : ""
             );
             
+            // (!) Hathora SDK Enums start at index 1 (not 0)
             if (!_serverConfig.HathoraCoreOpts.HasAppId)
                 helpboxLabelStrb.Append("`AppId` ");
             
@@ -161,8 +145,7 @@ namespace Hathora.Core.Scripts.Editor.Server.ConfigStyle.PostAuth
         {
             // Post the help box *before* we disable the button so it's easier to see (if toggleable)
             string labelStr = "This will generate a Linux Server Build for your game. " +
-                "It will also generate a Dockerfile. NOTE: this action will update your Build Settings to be 'Dedicated Server - Linux'";
-            
+                "It will also generate a /{Application.productName}/.hathora/Dockerfile";
             
             EditorGUILayout.HelpBox(labelStr, MessageType.Info);
         }
@@ -220,28 +203,6 @@ namespace Hathora.Core.Scripts.Editor.Server.ConfigStyle.PostAuth
             
             InsertSpace1x();
         }
-        private void insertScriptingBackendHorizGroup()
-        {
-            int selectedIndex = ServerConfig.LinuxHathoraAutoBuildOpts.ScriptingBackendIndex;
-            List<string> displayOptsStrArr = GetDisplayOptsStrArrFromEnum<HathoraAutoBuildOpts.ScriptingBackend>();
-            int newSelectedIndex = base.InsertHorizLabeledPopupList(
-                _labelStr: "Scripting backend", 
-                _tooltip: "'Mono' - faster build times.\n Requires 'Linux Build Support (Mono)' module installed\n\n" +
-                "'IL2CPP' - slower build, but better performance.\n Requires 'Linux Build Support (IL2CPP)' module installed\n\n" +
-                "Default: `Mono`",
-                _displayOptsStrArr: displayOptsStrArr.ToArray(),
-                _selectedIndex: selectedIndex,
-                _alignPopup: GuiAlign.SmallRight);
-            
-            bool isNewValidIndex = 
-                newSelectedIndex != selectedIndex &&
-                selectedIndex < displayOptsStrArr.Count;
-
-            if (isNewValidIndex)
-                onSelectedScriptingBackendPopupIndexChanged(newSelectedIndex);
-
-            InsertSpace1x();
-        }
         #endregion // UI Draw
 
         
@@ -279,14 +240,6 @@ namespace Hathora.Core.Scripts.Editor.Server.ConfigStyle.PostAuth
                 _inputStr);
         }
         
-        private void onSelectedScriptingBackendPopupIndexChanged(int _newSelectedIndex)
-        {
-            ServerConfig.LinuxHathoraAutoBuildOpts.ScriptingBackendIndex = _newSelectedIndex;
-            SaveConfigChange(
-                nameof(ServerConfig.LinuxHathoraAutoBuildOpts.ScriptingBackendIndex), 
-                _newSelectedIndex.ToString());
-        }
-        
         private void onOverwriteDockerfileChanged(bool _inputBool)
         {
             ServerConfig.LinuxHathoraAutoBuildOpts.OverwriteDockerfile = _inputBool;
@@ -315,7 +268,6 @@ namespace Hathora.Core.Scripts.Editor.Server.ConfigStyle.PostAuth
                 // +Appends strb logs
                 buildReport = await HathoraServerBuild.BuildHathoraLinuxServer(
                     ServerConfig,
-                    SerializedConfig,
                     cancelBuildTokenSrc.Token);
             }
             catch (TaskCanceledException)

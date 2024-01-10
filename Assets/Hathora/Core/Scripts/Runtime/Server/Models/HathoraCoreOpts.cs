@@ -3,11 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Hathora.Cloud.Sdk.Model;
+using Hathora.Core.Scripts.Runtime.Common.Models;
 using Hathora.Core.Scripts.Runtime.Common.Utils;
-using Hathora.Core.Scripts.Runtime.Server.Models.SerializedWrappers;
-using HathoraCloud.Models.Shared;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Hathora.Core.Scripts.Runtime.Server.Models
 {
@@ -22,12 +21,9 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models
         private int _existingAppsSelectedIndex = -1;
 
         /// <summary>Get from your Hathora dashboard</summary>
-        public string AppId => 
-            ExistingAppsWithDeploymentSerializable is { Count: > 0 } && 
-            _existingAppsSelectedIndex >= 0 && 
-            _existingAppsSelectedIndex < ExistingAppsWithDeploymentSerializable.Count
-                ? ExistingAppsWithDeploymentSerializable?[_existingAppsSelectedIndex]?.AppId
-                : null;
+        public string AppId => ExistingAppsWithDeployment != null && ExistingAppsWithDeployment.Count > 0 && _existingAppsSelectedIndex > -1 && _existingAppsSelectedIndex < ExistingAppsWithDeployment.Count
+            ? ExistingAppsWithDeployment?[_existingAppsSelectedIndex]?.AppId
+            : null;
         
         public bool HasAppId => !string.IsNullOrEmpty(AppId);
         
@@ -38,25 +34,67 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models
         }
 
         /// <summary>Ported from `ApplicationWithDeployment`</summary>
-        [FormerlySerializedAs("existingAppsWithDeploymentSerializableSerializable")]
-        [FormerlySerializedAs("_existingAppsWithDeploymentSerializable")]
-        [FormerlySerializedAs("_existingAppsWithDeploymentWrapper")]
         [SerializeField]
-        private List<ApplicationWithDeploymentSerializable> _existingAppsWithDeploymentSerializableSerializable = new();
-        public List<ApplicationWithDeploymentSerializable> ExistingAppsWithDeploymentSerializable
+        private List<ApplicationWithDeploymentWrapper> _existingAppsWithDeploymentWrapper = new();
+        
+        public List<ApplicationWithDeploymentWrapper> ExistingAppsWithDeploymentWrapper
         {
-            get => _existingAppsWithDeploymentSerializableSerializable;
-            set => _existingAppsWithDeploymentSerializableSerializable = value;
+            get => _existingAppsWithDeploymentWrapper;
+            set => _existingAppsWithDeploymentWrapper = value;
+        }
+
+        /// <summary>Ported from `ApplicationWithDeployment`</summary>
+        public List<ApplicationWithDeployment> ExistingAppsWithDeployment
+        {
+            get {
+                if (this._existingAppsWithDeploymentWrapper == null)
+                    return new List<ApplicationWithDeployment>();
+                
+                // Parse from `ApplicationWithDeploymentWrapper` to `ApplicationWithDeployment` 
+                List<ApplicationWithDeployment> appsWithDeployment = this._existingAppsWithDeploymentWrapper
+                    .Select(app => app.ToApplicationWithDeploymentType())
+                    .ToList();
+
+                return appsWithDeployment;
+            }
+            
+            set  
+            {
+                if (value == null)
+                    return;
+                
+                List<ApplicationWithDeploymentWrapper> parsedList = _existingAppsWithDeploymentWrapper = value
+                    .Select(app => new ApplicationWithDeploymentWrapper(app))
+                    .ToList();
+
+                this._existingAppsWithDeploymentWrapper = parsedList;
+            }
         }
 
         /// <summary>Cached from App API.</summary>
-        public List<string> GetExistingAppNames()
+        /// <param name="_prependDummyIndex0Str">
+        /// (!) Hathora SDK Enums starts at index 1; not 0: Care of indexes.
+        /// </param>
+        public List<string> GetExistingAppNames(string _prependDummyIndex0Str)
         {
-            if (_existingAppsWithDeploymentSerializableSerializable == null)
+            if (_existingAppsWithDeploymentWrapper == null)
                 return new List<string>();
 
-            IEnumerable<string> enumerable = _existingAppsWithDeploymentSerializableSerializable?
+            IEnumerable<string> enumerable = _existingAppsWithDeploymentWrapper?
                 .Select(app => app.AppName);
+
+            if (!string.IsNullOrEmpty(_prependDummyIndex0Str))
+            {
+                if (HathoraUtils.SDK_ENUM_STARTING_INDEX == 0)
+ #pragma warning disable CS0162 // Don't spam logs for `Unreachable code detected`
+                {
+                    Debug.LogWarning("HathoraUtils.SDK_ENUM_STARTING_INDEX == 0, " +
+                        "but you are using a _prependDummyIndex0Str: Intentional?");
+                }    
+ #pragma warning restore CS0162 // Don't spam logs for `Unreachable code detected`
+                
+                enumerable = enumerable.Prepend(_prependDummyIndex0Str);
+            }
 
             return enumerable?.ToList();
         }

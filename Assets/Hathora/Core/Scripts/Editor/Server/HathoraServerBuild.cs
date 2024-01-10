@@ -12,7 +12,6 @@ using Hathora.Core.Scripts.Runtime.Common.Utils;
 using Hathora.Core.Scripts.Runtime.Server;
 using Hathora.Core.Scripts.Runtime.Server.Models;
 using UnityEditor;
-using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
@@ -43,7 +42,6 @@ namespace Hathora.Core.Scripts.Editor.Server
         /// <returns>isSuccess</returns>
         public static async Task<BuildReport> BuildHathoraLinuxServer(
             HathoraServerConfig _serverConfig,
-            SerializedObject _serializedConfig,
             CancellationToken _cancelToken = default)
         {
             string logPrefix = $"[{nameof(HathoraServerBuild)}.{nameof(BuildHathoraLinuxServer)}]";
@@ -75,20 +73,26 @@ namespace Hathora.Core.Scripts.Editor.Server
             cleanCreateBuildDir(_serverConfig, configPaths.PathToBuildDir);
             _cancelToken.ThrowIfCancellationRequested();
             
-            // Cache build settings so we can revert after
-            BuildTarget originalBuildTarget = EditorUserBuildSettings.activeBuildTarget;
-            StandaloneBuildSubtarget originalBuildSubtarget = EditorUserBuildSettings.standaloneBuildSubtarget;
-            BuildTargetGroup originalBuildTargetGroup = BuildPipeline.GetBuildTargetGroup(originalBuildTarget);
-            ScriptingImplementation originalScriptingBackend = PlayerSettings.GetScriptingBackend(originalBuildTargetGroup);
+            #region bug (when restored later): Recompiles - you lose all logs [including HathoraServerConfig logs]
+            // // ----------------
+            // // This will change your selected build setting: Cache here, revert later
+            // BuildTarget originalBuildTarget = EditorUserBuildSettings.activeBuildTarget;
+            // BuildTargetGroup originalBuildTargetGroup = BuildPipeline.GetBuildTargetGroup(originalBuildTarget);
+            // int originalArchitecture = PlayerSettings.GetArchitecture(originalBuildTargetGroup);
+            // ScriptingImplementation originalScriptingBackend = PlayerSettings.GetScriptingBackend(originalBuildTargetGroup);
+            // ApiCompatibilityLevel originalApiCompatibility = PlayerSettings.GetApiCompatibilityLevel(originalBuildTargetGroup);
+            //
+            // // Sanity check: Does the 1st scene match the current scene we're on?
+            // // Many devs intend to build on the scene they're working on 1st, but forget to swap the order
+            // EditorBuildSettingsScene firstSceneInBuildSettings = EditorBuildSettings.scenes[0]; 
+            // if (firstSceneInBuildSettings.path != SceneManager.GetActiveScene().path)
+            // {
+            //     Debug.Log($"{logPrefix} <color=orange>(!)</color> The 1st scene in build " +
+            //         $"settings ({firstSceneInBuildSettings.path}) !matches the current Editor " +
+            //         $"scene ({SceneManager.GetActiveScene().path}); intended?");
+            // }
+            #endregion // bug (when restored later): Recompiles - you lose all logs [including HathoraServerConfig logs]
 
-            // Set scripting backend to based on selection in server config file
-            ScriptingImplementation scriptingImpl = _serverConfig.LinuxHathoraAutoBuildOpts.SelectedScriptingBackend == HathoraAutoBuildOpts.ScriptingBackend.IL2CPP ?
-                ScriptingImplementation.IL2CPP : ScriptingImplementation.Mono2x;
-            PlayerSettings.SetScriptingBackend(
-                NamedBuildTarget.Server,
-                scriptingImpl);
-            strb.AppendLine("Configuring scripting backend: " + scriptingImpl);
-            
             // ----------------
             // Generate build opts
             BuildPlayerOptions buildPlayerOptions = generateBuildPlayerOptions(
@@ -148,24 +152,37 @@ namespace Hathora.Core.Scripts.Editor.Server
                 return buildReport; // fail
             }
             
-            // Revert to cached build/player settings to leaves things as they were
-            EditorApplication.delayCall += () =>
-            {
-                // Revert build settings back to what it was prior
-                EditorUserBuildSettings.SwitchActiveBuildTarget(originalBuildTargetGroup, originalBuildTarget);
-                PlayerSettings.SetScriptingBackend(originalBuildTargetGroup, originalScriptingBackend);
-                EditorUserBuildSettings.standaloneBuildSubtarget = originalBuildSubtarget;
-            };
-
+            #region bug: Recompiles - you lose all logs [including HathoraServerConfig logs]
+            // // ----------------
+            // // Delay since we don't want the rest of the block to cutoff (This causes a recompile)
+            // EditorApplication.delayCall += () =>
+            // {
+            //     // Revert build settings since we changed them to headless Linux server
+            //     EditorUserBuildSettings.SwitchActiveBuildTarget(originalBuildTargetGroup, originalBuildTarget);
+            //     PlayerSettings.SetArchitecture(originalBuildTargetGroup, originalArchitecture);
+            //     PlayerSettings.SetScriptingBackend(originalBuildTargetGroup, originalScriptingBackend);
+            //     PlayerSettings.SetApiCompatibilityLevel(originalBuildTargetGroup, originalApiCompatibility);
+            //
+            //     Debug.Log(
+            //         $"{logPrefix} Reverted build settings to original: " +
+            //         $"[BuildTarget: {originalBuildTarget}, " +
+            //         $"BuildTargetGroup: {originalBuildTargetGroup}, " +
+            //         $"Architecture: {originalArchitecture}, " +
+            //         $"ScriptingBackend: {originalScriptingBackend}, " +
+            //         $"ApiCompatibility: {originalApiCompatibility}");
+            // };
+            #endregion // bug: Recompiles - you lose all logs [including HathoraServerConfig logs]
+            
             strb.AppendLine($"**BUILD SUCCESS: {resultStr}**");
 
             // ----------------
             // Open the build directory - this will lose focus of the inspector
+            // TODO: Play a small, subtle chime sfx?
             strb.AppendLine("Opening build dir ...").AppendLine();
             Debug.Log($"{logPrefix} Build succeeded @ path: `{configPaths.PathToBuildDir}`");
             
             EditorUtility.RevealInFinder(configPaths.PathToBuildExe);
-            cacheFinishedBuildReportLogs(_serverConfig, _serializedConfig, buildReport);
+            cacheFinishedBuildReportLogs(_serverConfig, buildReport);
 
             // ----------------
             // Restore focus and return the build report
@@ -192,7 +209,6 @@ namespace Hathora.Core.Scripts.Editor.Server
 
         private static void cacheFinishedBuildReportLogs(
             HathoraServerConfig _serverConfig, 
-            SerializedObject _serializedConfig,
             BuildReport _buildReport)
         {
             _serverConfig.LinuxHathoraAutoBuildOpts.LastBuildReport = _buildReport;
@@ -216,12 +232,6 @@ namespace Hathora.Core.Scripts.Editor.Server
             // {green}Completed{/green} {date} {time} (in {hh}h:{mm}m:{ss}s)
             // BUILD DONE
             // #########################################################
-
-            _serverConfig.LinuxHathoraAutoBuildOpts.LastBuildLogsStr = _serverConfig.LinuxHathoraAutoBuildOpts.LastBuildLogsStrb.ToString();
-            Debug.Log("Persist build logs.");
-            _serializedConfig.ApplyModifiedProperties();
-            EditorUtility.SetDirty(_serverConfig); // Mark the object as dirty
-            AssetDatabase.SaveAssets(); // Save changes to the ScriptableObject asset
         }
 
         /// <summary></summary>
@@ -241,10 +251,12 @@ namespace Hathora.Core.Scripts.Editor.Server
                 scenes = scenePaths,
                 locationPathName = _serverBuildExeFullPath,
                 target = BuildTarget.StandaloneLinux64,
-                subtarget = (int)StandaloneBuildSubtarget.Server
+                options = _serverConfig.LinuxHathoraAutoBuildOpts.IsDevBuild 
+                    ? BuildOptions.Development 
+                    : BuildOptions.None,
             };
-
-            // Ensure build is a headless Linux server (Important: triggers compile as UNITY_SERVER)
+            
+            // Ensure build is a headless Linux server (formerly set via `options = BuildOptions.EnableHeadlessMode`)
             EditorUserBuildSettings.standaloneBuildSubtarget = StandaloneBuildSubtarget.Server;
 
             return buildPlayerOpts;

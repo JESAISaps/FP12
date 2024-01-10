@@ -1,5 +1,6 @@
 // Created by dylan@hathora.dev
 
+using Hathora.Cloud.Sdk.Model;
 using UnityEngine;
 
 namespace Hathora.Core.Scripts.Runtime.Client.Config

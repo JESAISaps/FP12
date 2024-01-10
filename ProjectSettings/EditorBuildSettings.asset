@@ -6,13 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Menu.unity
-    guid: 5239afb752816984d811cf244c22335d
-  - enabled: 1
-    path: Assets/Scenes/Playground.unity
-    guid: 707acc8dffb72b144bb1ffbe1c965f3d
-  m_configObjects:
-    com.unity.addressableassets: {fileID: 11400000, guid: 07d22eb92b7544d44a81236113f8cc76,
-      type: 2}
-    com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7,
-      type: 2}
+    path: Assets/Scenes/Scene-Fishnet01.unity
+    guid: 2c1107f65dfe1ce499d80c4fbe5fbe8a
+  m_configObjects: {}
