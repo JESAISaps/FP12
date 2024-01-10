@@ -18,8 +18,8 @@ namespace Hathora.Demos.Shared.Scripts.Client.ClientMgr
                 return;
             }
 
-            roomText.text = $"RoomId={roomId}";
-            descriptionText.text = $"CreatedAt={createdAt}, CreatedBy={createdBy}";
+            roomText.text = $"Id de la partie : {roomId}";
+            descriptionText.text = $"Créée à : {createdAt}";
         }
 
         public void SetRoomText(string text)

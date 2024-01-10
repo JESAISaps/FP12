@@ -57,6 +57,7 @@ public sealed class PawnWeapon : NetworkBehaviour
 	void Start()
     {
 		// dans la start car si on la met dans OnStartNetwork alors les setactive du sniper ne marchent pas
+		// faut pas oublier d'activer le snipe par defaut, sinon bug qui casse la tete
 		SetupWeapon();
 	}
 
@@ -75,9 +76,20 @@ public sealed class PawnWeapon : NetworkBehaviour
 
     private void SwitchWeapon()
     {
+		// change en premier l'arme de maniere locale, et ensuite sur le serv, pour aller plus vite coté joueur
 
-		ChangeWeaponGraphics(this, false, currentWeapon);
+		// variable temporaire pour eviter de trop modifier currentweapon
+		int tempWeapon = currentWeapon;
+		// local
+		ChangeWeaponGraphicsLocal(this, false, tempWeapon);
+		tempWeapon = 1 - tempWeapon;
+		// local
+		ChangeWeaponGraphicsLocal(this, true, tempWeapon);
+
+		//serveur
+		ChangeWeaponGraphicsLocal(this, false, currentWeapon);
 		currentWeapon = 1 - currentWeapon;
+		//serveur
 		ChangeWeaponGraphics(this, true, currentWeapon);
 
 		currentWeaponNetworkAnimator = weapons[currentWeapon].GetComponent<NetworkAnimator>();
@@ -102,9 +114,7 @@ public sealed class PawnWeapon : NetworkBehaviour
 				Shoot(shootCamera.position, shootCamera.TransformDirection(Vector3.forward), weaponStats[currentWeapon].damage, weaponStats[currentWeapon].range);
 				Debug.Log("A tiré");
 				_timeUntilNextShot = weaponStats[currentWeapon].firerate;
-			}
-			
-			
+			}					
 		}
 		else
 		{
@@ -205,12 +215,18 @@ public sealed class PawnWeapon : NetworkBehaviour
 
 	}
 
+	private void ChangeWeaponGraphicsLocal(PawnWeapon script, bool newState, int currentWeapon)
+	{
+		script.weapons[currentWeapon].SetActive(newState);
+	}
+
 	[ObserversRpc]
 	private void ChangeWeaponGraphicsObserver(PawnWeapon script, bool newState, int currentWeapon)
     {
 		Debug.Log(script.weapons[currentWeapon].name + " mis a " + newState.ToString());
 		// on desactive l'arme actuelle
-		script.weapons[currentWeapon].SetActive(newState);
+		if (!base.IsOwner)
+			script.weapons[currentWeapon].SetActive(newState);
 	}
 
 

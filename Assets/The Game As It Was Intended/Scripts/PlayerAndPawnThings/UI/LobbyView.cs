@@ -43,4 +43,10 @@ public sealed class LobbyView : View
 
 		startGameButton.interactable = GameManager.Instance.canStart;
 	}
+
+    public void JoinGame()
+    {
+		GameManager.Instance.StartGame();
+
+	}
 }
