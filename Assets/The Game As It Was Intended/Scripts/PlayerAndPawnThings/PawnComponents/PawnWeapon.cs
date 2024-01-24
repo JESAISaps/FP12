@@ -87,7 +87,7 @@ public sealed class PawnWeapon : NetworkBehaviour
 		ChangeWeaponGraphicsLocal(this, true, tempWeapon);
 
 		//serveur
-		ChangeWeaponGraphicsLocal(this, false, currentWeapon);
+		ChangeWeaponGraphics(this, false, currentWeapon);
 		currentWeapon = 1 - currentWeapon;
 		//serveur
 		ChangeWeaponGraphics(this, true, currentWeapon);
@@ -144,7 +144,7 @@ public sealed class PawnWeapon : NetworkBehaviour
 
     }
 
-	[ServerRpc]
+	[ServerRpc(RequireOwnership = false)]
 	public void DoParticleEffect()
     {
 		DoParticleEffectObserver();
@@ -153,7 +153,8 @@ public sealed class PawnWeapon : NetworkBehaviour
 	[ObserversRpc]
 	void DoParticleEffectObserver()
     {
-		effect.Play();
+		if(!base.IsOwner)
+			effect.Play();
     }
 
 	// inutile, le trigger se desactive automatiquement
@@ -164,7 +165,7 @@ public sealed class PawnWeapon : NetworkBehaviour
 		animator.ResetTrigger("Shoot");
     }*/
 
-	[ServerRpc]
+	[ServerRpc(RequireOwnership = false)]
 	private void ServerFire(Vector3 firePointPosition, Vector3 firePointDirection, float damage, float range)
 	{
 		if (Physics.Raycast(firePointPosition, firePointDirection, out RaycastHit hit, range, ~ignoreOnShootRaycast))
@@ -187,7 +188,7 @@ public sealed class PawnWeapon : NetworkBehaviour
 		}
 	}
 
-	[ServerRpc]
+	[ServerRpc(RequireOwnership = false)]
 	void DoTrailEffect(Vector3 start, Vector3 end, float timeToWait)
     {
 		ObserverDoTrailEffect(start, end, timeToWait);
@@ -208,7 +209,7 @@ public sealed class PawnWeapon : NetworkBehaviour
 		laserLine.enabled = false;
     }
 
-	[ServerRpc]
+	[ServerRpc(RequireOwnership=false)]
 	private void ChangeWeaponGraphics(PawnWeapon script, bool newState, int currentWeapon)
     {
 		ChangeWeaponGraphicsObserver(script, newState, currentWeapon);
