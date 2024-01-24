@@ -56,7 +56,7 @@ namespace Hathora.Core.Scripts.Runtime.Client.ApiWrapper
         public async Task<Lobby> ClientCreateLobbyAsync(
             string _playerAuthToken,
             CreateLobbyRequest.VisibilityEnum lobbyVisibility,
-            Region _region = Region.WashingtonDC,
+            Region _region = Region.Frankfurt,
             string _initConfigJsonStr = "{}",
             string roomId = null,
             CancellationToken _cancelToken = default)
