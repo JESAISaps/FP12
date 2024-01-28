@@ -111,7 +111,7 @@ namespace Hathora.Demos.Shared.Scripts.Client.ClientMgr
             SetShowLobbyTxt("<color=yellow>Creating Lobby...</color>");
 
             // (!) Region Index starts at 1 (not 0) // TODO: Get from UI
-            const Region _region = Region.WashingtonDC;
+            const Region _region = Region.Frankfurt;
             
             _ = hathoraClientMgrBase.CreateLobbyAsync(_region); // !await // public lobby
         }
