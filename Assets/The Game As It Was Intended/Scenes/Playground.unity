@@ -1288,17 +1288,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 396977619573250406, guid: f11b584c218d1a54e89d2a35f0478b19,
-        type: 3}
-      propertyPath: m_Type
-      value: 0
+    - target: {fileID: 1665677957, guid: f11b584c218d1a54e89d2a35f0478b19, type: 3}
+      propertyPath: m_MaxValue
+      value: 8
       objectReference: {fileID: 0}
-    - target: {fileID: 396977619573250406, guid: f11b584c218d1a54e89d2a35f0478b19,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: f9a5678f76b712c43aa6172dc1924737,
-        type: 3}
     - target: {fileID: 1811682493120082735, guid: f11b584c218d1a54e89d2a35f0478b19,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1404,40 +1397,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2080701986933483732, guid: f11b584c218d1a54e89d2a35f0478b19,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 2080701986933483732, guid: f11b584c218d1a54e89d2a35f0478b19,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 2080701986933483732, guid: f11b584c218d1a54e89d2a35f0478b19,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2080701986933483732, guid: f11b584c218d1a54e89d2a35f0478b19,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2080701986933483732, guid: f11b584c218d1a54e89d2a35f0478b19,
-        type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3155379556228123244, guid: f11b584c218d1a54e89d2a35f0478b19,
         type: 3}
       propertyPath: m_Name
       value: MainHUD
-      objectReference: {fileID: 0}
-    - target: {fileID: 4830075461105776308, guid: f11b584c218d1a54e89d2a35f0478b19,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f11b584c218d1a54e89d2a35f0478b19, type: 3}
