@@ -17,6 +17,8 @@ public sealed class PawnInput : NetworkBehaviour
 
 	public bool changeWeapon;
 
+	public KeyCode changeWeaponKey;
+
 	private void Update()
 	{
 		if (!IsOwner)
@@ -32,7 +34,7 @@ public sealed class PawnInput : NetworkBehaviour
 
 		jump = Input.GetButton("Jump");
 
-		changeWeapon = Input.GetKeyDown(KeyCode.Q);
+		changeWeapon = Input.GetKeyDown(changeWeaponKey);
 
 		fire = Input.GetButton("Fire1");
 	}

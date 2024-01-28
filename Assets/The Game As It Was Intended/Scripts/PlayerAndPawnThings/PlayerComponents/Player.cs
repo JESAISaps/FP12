@@ -104,6 +104,9 @@ public sealed class Player : NetworkBehaviour
 	private void TargetPawnSpawned(NetworkConnection networkConnection)
 	{
 		UIManager.Instance.Show<MainView>();
+
+		Cursor.lockState = CursorLockMode.Locked;
+		Cursor.visible = !Cursor.visible;
 	}
 
 	[TargetRpc]

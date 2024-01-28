@@ -788,6 +788,7 @@ MonoBehaviour:
   jump: 0
   fire: 0
   changeWeapon: 0
+  changeWeaponKey: 97
 --- !u!114 &6286386819928312234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2715,6 +2716,7 @@ MonoBehaviour:
   _networkBehaviours:
   - {fileID: 1007705763533065061}
   - {fileID: 3638819414046587382}
+  - {fileID: 4170886583715732420}
   <ParentNetworkObject>k__BackingField: {fileID: 2399309331225412074}
   <ChildNetworkObjects>k__BackingField: []
   SerializedTransformProperties:
@@ -2744,9 +2746,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 166143960523200177}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 166143960523200177}
   _componentConfiguration: 0
   _synchronizeParent: 0
   _packing:
