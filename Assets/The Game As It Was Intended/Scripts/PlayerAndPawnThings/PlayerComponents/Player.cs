@@ -106,12 +106,15 @@ public sealed class Player : NetworkBehaviour
 		UIManager.Instance.Show<MainView>();
 
 		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = !Cursor.visible;
+		Cursor.visible = false;
 	}
 
 	[TargetRpc]
 	public void TargetPawnKilled(NetworkConnection networkConnection)
 	{
 		UIManager.Instance.Show<RespawnView>();
+
+		Cursor.lockState = CursorLockMode.None;
+		Cursor.visible = true;
 	}
 }

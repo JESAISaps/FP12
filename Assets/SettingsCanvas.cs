@@ -7,6 +7,7 @@ public class SettingsCanvas : MonoBehaviour
     Resolution[] resolutions;
 
     public TMPro.TMP_Dropdown resolutionDropdown;
+    public TMPro.TMP_Dropdown qualityDropdown;
 
     private SwitchScreen switcher;
 
@@ -37,6 +38,8 @@ public class SettingsCanvas : MonoBehaviour
 
         switcher = transform.parent.GetComponent<SwitchScreen>();
 
+        // default quality is Medium
+        qualityDropdown.value = 1;
     }
 
     public void SetResolution(int resolutionIndex)
@@ -53,5 +56,10 @@ public class SettingsCanvas : MonoBehaviour
     public void Confirm()
     {
         switcher.ToggleSettingsScreen();
+    }
+
+    public void ChangeQuality(int quality)
+    {
+        QualitySettings.SetQualityLevel(quality);
     }
 }

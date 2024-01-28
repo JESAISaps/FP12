@@ -134,6 +134,9 @@ Library: C:\UnityProjects\GitProject\FP12\Temp\StagingArea\Data\Plugins\lib_burs
 --compilation-defines=UNITY_INPUT_SYSTEM_ENABLE_PHYSICS
 --compilation-defines=UNITY_INPUT_SYSTEM_ENABLE_PHYSICS2D
 --compilation-defines=UNITY_INPUT_SYSTEM_ENABLE_UI
+--compilation-defines=ADAPTIVE_PERFORMANCE_2_0_0_OR_NEWER
+--compilation-defines=ADAPTIVE_PERFORMANCE_2_1_0_OR_NEWER
+--compilation-defines=ADAPTIVE_PERFORMANCE_4_0_0_OR_NEWER
 --compilation-defines=ENABLE_BURST_1_0_0_OR_NEWER
 --compilation-defines=USING_ANIMATION_MODULE
 --compilation-defines=USING_PHYSICS2D_MODULE
@@ -146,6 +149,7 @@ Library: C:\UnityProjects\GitProject\FP12\Temp\StagingArea\Data\Plugins\lib_burs
 --compilation-defines=MODULE_PARTICLE_SYSTEM_EXISTS
 --compilation-defines=ENABLE_ASYNC_ASSETBUNDLE_UWR
 --compilation-defines=TIMELINE_FRAMEACCURATE
+--compilation-defines=VISUAL_SCRIPTING_ENABLED
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=C:\UnityProjects\GitProject\FP12\Temp\Burst
 --debug=Full
@@ -315,6 +319,9 @@ Library: C:\UnityProjects\GitProject\FP12\Temp\StagingArea\Data\Plugins\lib_burs
 --compilation-defines=UNITY_INPUT_SYSTEM_ENABLE_PHYSICS
 --compilation-defines=UNITY_INPUT_SYSTEM_ENABLE_PHYSICS2D
 --compilation-defines=UNITY_INPUT_SYSTEM_ENABLE_UI
+--compilation-defines=ADAPTIVE_PERFORMANCE_2_0_0_OR_NEWER
+--compilation-defines=ADAPTIVE_PERFORMANCE_2_1_0_OR_NEWER
+--compilation-defines=ADAPTIVE_PERFORMANCE_4_0_0_OR_NEWER
 --compilation-defines=ENABLE_BURST_1_0_0_OR_NEWER
 --compilation-defines=USING_ANIMATION_MODULE
 --compilation-defines=USING_PHYSICS2D_MODULE
@@ -327,6 +334,7 @@ Library: C:\UnityProjects\GitProject\FP12\Temp\StagingArea\Data\Plugins\lib_burs
 --compilation-defines=MODULE_PARTICLE_SYSTEM_EXISTS
 --compilation-defines=ENABLE_ASYNC_ASSETBUNDLE_UWR
 --compilation-defines=TIMELINE_FRAMEACCURATE
+--compilation-defines=VISUAL_SCRIPTING_ENABLED
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=C:\UnityProjects\GitProject\FP12\Temp\Burst
 --debug=Full

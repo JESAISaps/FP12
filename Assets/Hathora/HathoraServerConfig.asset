@@ -73,7 +73,7 @@ MonoBehaviour:
     _overwriteDockerfile: 1
   _hathoraDeployOpts:
     _roomsPerProcess: 1
-    _planNameSelectedIndex: 1
+    _planNameSelectedIndex: 3
     _containerPortWrapper:
       _transportType: 2
       _portNumber: 7777
